@@ -31,8 +31,9 @@ wk.register({
 
   },
   f = { ':lua require\'telescope.builtin\'.find_files(require(\'telescope.themes\').get_dropdown({ previewer = false, winblend = 10, position = \'top\'}))<cr>', 'Find File' },
-  e = {':NvimTreeToggle<CR>', 'Open Tree View'}
-}, { prefix = "<leader>" })
+  e = {':NvimTreeFindFile<CR>', 'Open Tree View'}},
+{ prefix = "<leader>" }
+)
 
 wk.register({
     d = {'<Cmd>lua vim.lsp.buf.definition()<CR>', 'Go to definition'},
