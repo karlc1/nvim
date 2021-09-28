@@ -34,8 +34,16 @@ vim.cmd('autocmd VimResized * wincmd =')
 -- Highlight current line, but only in the line number
 vim.api.nvim_exec([[
     set cursorline
-    au VimEnter * highlight clear CursorLine
-    au VimEnter * highlight clear CursorLineNr
+    highlight clear CursorLine
+    highlight clear CursorLineNr
+
+    " apply changes if colorscheme is changed on the fly
+    augroup MyColors
+    autocmd!
+    autocmd ColorScheme * highlight clear CursorLine
+                      \ | highlight clear CursorLineNr
+    augroup END
+
 ]], false)
 
 
