@@ -1,3 +1,14 @@
+
+
+local lsp = vim.lsp
+local handlers = lsp.handlers
+
+-- Hover doc popup
+local pop_opts = { border = "rounded", max_width = 80 }
+handlers["textDocument/hover"] = lsp.with(handlers.hover, pop_opts)
+handlers["textDocument/signatureHelp"] = lsp.with(handlers.signature_help, pop_opts)
+
+
 -- Global dir paths
 DATA_PATH = vim.fn.stdpath('data')
 CACHE_PATH = vim.fn.stdpath('cache')
@@ -55,6 +66,41 @@ require'lspconfig'.graphql.setup{
 }
 
 
+-- YAML
+require'lspconfig'.yamlls.setup{
+        cmd = {DATA_PATH .. "/lspinstall/yaml/node_modules/.bin/yaml-language-server", "--stdio"},
+        -- on_attach = require'lsp'.common_on_attach,
+	settings = {
+                yaml = {
+                        format = {
+                                enable = true,
+                        },
+                        hover = true,
+                        completion = true,
+
+                        customTags = {
+                        	"!fn",
+	        		"!And",
+	        		"!If",
+	        		"!Not",
+	        		"!Equals",
+	        		"!Or",
+	        		"!FindInMap sequence",
+	        		"!Base64",
+	        		"!Cidr",
+	        		"!Ref",
+	        		"!Ref Scalar",
+	        		"!Sub",
+	        		"!GetAtt",
+	        		"!GetAZs",
+	        		"!ImportValue",
+	        		"!Select",
+	        		"!Split",
+	        		"!Join sequence"
+                        },
+                },
+	},
+}
 
 
 -- Organize imports and format on save
@@ -87,4 +133,3 @@ vim.api.nvim_command("au BufWritePre *.go lua lsp_organize_imports()")
 
 -- Format on save
 vim.api.nvim_command("autocmd BufWritePre *.go silent! lua vim.lsp.buf.formatting_sync()")
-
