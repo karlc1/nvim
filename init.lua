@@ -2,6 +2,7 @@
 require('plugins')
 require('keymappings')
 require('lsp')
+require('statusline')
 
 -- LSP
 -- require('lsp.go')

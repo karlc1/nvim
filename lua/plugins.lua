@@ -22,7 +22,7 @@ return require('packer').startup(
         opt = false,
     }
     use { "ray-x/lsp_signature.nvim" , opt = false }
-
+    use {"ahmedkhalf/lsp-rooter.nvim", opt = false }
 
     -- Telescope
     use {
@@ -46,14 +46,23 @@ return require('packer').startup(
 
     -- Color and visuals
     use {'embark-theme/vim', opt = true}
-    use {"kyazdani42/nvim-web-devicons", opt = true}
+
+    use {
+        'kyazdani42/nvim-web-devicons',
+        opt = false,
+        config = function()
+            require'nvim-web-devicons'.setup{
+                default = true
+            }
+        end
+    }
 
     -- Keymappings
     use { "folke/which-key.nvim", opt = false}
 
     -- Buffers
     use {
-	'akinsho/bufferline.nvim', 
+	'akinsho/bufferline.nvim',
         requires = { 'kyazdani42/nvim-web-devicons' },
 	config = function()
 		require('bufferline').setup {
@@ -114,20 +123,30 @@ return require('packer').startup(
         'karb94/neoscroll.nvim',
         opt = false,
         config = function()
-            require('neoscroll').setup()
+            require('neoscroll').setup({
+               -- easing_function = "circular",
+            })
             local t = {}
             -- Syntax: t[keys] = {function, {function arguments}}
-            t['<C-u>'] = {'scroll', {'-vim.wo.scroll', 'true', '250'}}
-            t['<C-d>'] = {'scroll', { 'vim.wo.scroll', 'true', '250'}}
+            t['<C-u>'] = {'scroll', {'-vim.wo.scroll', 'true', '200'}}
+            t['<C-d>'] = {'scroll', { 'vim.wo.scroll', 'true', '200'}}
             t['<C-b>'] = {'scroll', {'-vim.api.nvim_win_get_height(0)', 'true', '450'}}
             t['<C-f>'] = {'scroll', { 'vim.api.nvim_win_get_height(0)', 'true', '450'}}
             t['<C-y>'] = {'scroll', {'-0.10', 'false', '100'}}
             t['<C-e>'] = {'scroll', { '0.10', 'false', '100'}}
-            t['zt']    = {'zt', {'250'}}
-            t['zz']    = {'zz', {'250'}}
-            t['zb']    = {'zb', {'250'}}
+            t['zt']    = {'zt', {'150'}}
+            t['zz']    = {'zz', {'150'}}
+            t['zb']    = {'zb', {'150'}}
             require('neoscroll.config').set_mappings(t)
 
+        end
+    }
+
+    use {
+        "phaazon/hop.nvim",
+        opt = false,
+        config = function()
+            require'hop.highlight'.insert_highlights()
         end
     }
 
@@ -140,6 +159,7 @@ return require('packer').startup(
         },
         opt = false,
         config = function()
+            vim.api.nvim_exec([[set pumheight=10]], false)
             local cmp = require('cmp')
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
@@ -152,13 +172,16 @@ return require('packer').startup(
                 },
                 sorting = {
                     comparators = {
-                        cmp.config.compare.exact,
-                        cmp.config.compare.score,
-                        cmp.config.compare.length,
+                        cmp.config.compare.order,
                         cmp.config.compare.offset,
                         cmp.config.compare.kind,
+                        cmp.config.compare.length,
+                        cmp.config.compare.exact,
+                        -- cmp.config.compare.score,
+                        -- cmp.config.compare.length,
+                        -- cmp.config.compare.offset,
                         -- cmp.config.compare.sort_text,
-                        cmp.config.compare.order,
+                        -- cmp.config.compare.order,
                     }
                 },
                 mapping = {
@@ -192,6 +215,48 @@ return require('packer').startup(
             })
         end
     }
+
+    -- Git
+    use { 'tpope/vim-fugitive'}
+    use {
+        'lewis6991/gitsigns.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim'
+        },
+        config = function()
+            require('gitsigns').setup{
+                signcolumn = false,
+                numhl      = false,
+                linehl     = false,
+                word_diff  = false,
+
+            }
+        end
+    }
+
+
+    -- Code comments
+    use {
+        "terrortylor/nvim-comment",
+        opt = false,
+        config = function()
+            require('nvim_comment').setup(
+                    {
+                        create_mappings = false,
+                        operator_mapping = "gc",
+
+                    }
+            )
+        end
+    }
+
+    -- Status line
+    use {
+        'famiu/feline.nvim',
+        opt = false,
+    }
+
+
 
   end
 )
