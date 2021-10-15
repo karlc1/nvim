@@ -6,7 +6,7 @@ vim.api.nvim_set_keymap('n', 's', ":HopChar1<CR>", {noremap = true, silent = tru
 -- Cycle and kill buffers
 vim.api.nvim_set_keymap('n', 'H', ':BufferLineCyclePrev<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'L', ':BufferLineCycleNext<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', 'X', ':bw<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'X', ':bw!<CR>', {noremap = true, silent = true})
 
 -- Navigate splits withuot pressing <C-w> first
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true, silent = true})
@@ -21,34 +21,68 @@ vim.api.nvim_set_keymap('n', 'K', '1<C-y>', {noremap = true, silent = true})
 -- Disable highlight on <ESC>
 vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC>', {noremap = true, silent = true})
 
-vim.api.nvim_set_keymap("v", "<leader>c", "<cmd>CommentToggle<CR>", {noremap=true, silent = true})
+-- cmd mode on ;
+vim.api.nvim_set_keymap('n', ';', ':', {noremap = true, silent = true})
 
+-- Normal leader keymaps
 wk.register({
   s = {
     name = "Search",
-    s = {':lua require\'telescope.builtin\'.lsp_document_symbols(require(\'telescope.themes\').get_dropdown({ previewer = false, winblend = 10, symbol_width = 65, symbol_type_width = 100}))<cr>', 'Search doc symbol'},
-    S = {':lua require\'telescope.builtin\'.lsp_workspace_symbols(require(\'telescope.themes\').get_dropdown({ previewer = false, winblend = 10, symbol_width = 65, symbol_type_width = 100}))<cr>', 'Search WS symbol'},
-    r = {':lua require\'telescope.builtin\'.resume()<cr>', 'Resume last search'},
-    w = {'<Cmd>Telescope grep_string<CR>', 'Search word under cursor'},
-
-    t = {':lua require\'telescope.builtin\'.live_grep(require(\'telescope.themes\').get_dropdown({winblend = 10, symbol_width = 65, symbol_type_width = 100}))<cr>', 'Search doc symbol'},
+    s = { function() require'telescope.builtin'.lsp_document_symbols() end, 'Search doc symbol'},
+    S = { function() require'telescope.builtin'.lsp_workspace_symbols() end, 'Search workspace symbol'},
+    r = { function() require'telescope.builtin'.resume() end, 'Resume last search'},
+    w = { function() require'telescope.builtin'.grep_string() end, 'Search word under cursor'},
+    t = { function() require'telescope.builtin'.live_grep() end, 'Search any text'},
 
   },
-  D = {
-    name = "Diagnostics",
-    n = {':lua vim.lsp.diagnostic.goto_next({popup_opts={focusable=false,border=\'rounded\'}})<CR>', 'Next diagnostics'},
-    p = {':lua vim.lsp.diagnostic.goto_prev({popup_opts={focusable=false,border=\'rounded\'}})<CR>', 'Next diagnostics'},
-    l = {':Telescope lsp_document_diagnostics<CR>', 'List doc diagnostics'},
-    L = {':Telescope lsp_workspace_diagnostics<CR>', 'List workspace diagnostics'},
-  },
+  -- D = {
+  --   name = "Diagnostics",
+  --   n = { function() vim.lsp.diagnostic.goto_next({popup_opts={focusable=false,border='rounded'}}) end, 'Next diagnostics'},
+  --   p = { function() vim.lsp.diagnostic.goto_prev({popup_opts={focusable=false,border='rounded'}}) end, 'Prev diagnostics'},
+  --   l = { function() require'telescope.builtin'.lsp_document_diagnostics() end, 'List doc diagnostics'},
+  --   L = { function() require'telescope.builtin'.lsp_workspace_diagnostics() end, 'List workspace diagnostics'},
+  -- },
 
+  f = { function() require'telescope.builtin'.find_files() end, 'Find files' },
+  F = { function() require'telescope.builtin'.find_files({hidden=true}) end, 'Find files including hidden' },
 
-  f = { ':lua require\'telescope.builtin\'.find_files(require(\'telescope.themes\').get_dropdown({ previewer = false, winblend = 10, position = \'top\'}))<cr>', 'Find File' },
   e = {':NvimTreeFindFile<CR>', 'Open Tree View'},
-  c = {':CommentToggle<CR>', 'Toggle comment'},
+  c = {':CommentToggle<CR>', 'Toggle comment' },
 
+  w = {':w <cr>', 'Write file' },
 
+  t = {
+      name = "Test",
+      n = { ':UltestNearest<CR>', 'Test nearest'},
+      f = { ':Ultest<CR>', 'Test file'},
+      s = { ':UltestSummary<CR>', 'Toggle summary'},
+      o = { ':UltestOutput<CR>', 'Show test output'},
+  },
+
+    d = {
+        name = "Debug and diagnostics",
+
+        -- debug
+        b = { function() require'dap'.toggle_breakpoint() end, 'Toggle breakpoint'},
+        c = { function() require'dap'.continue() end, 'Continue' },
+        o = { function() require'dap'.step_over() end, 'Step over' },
+        i = { function() require'dap'.step_into() end, 'Step into' },
+        u = { function() require("dapui").toggle() end, 'Toggle UI' },
+        t = { function() require('dap-go').debug_test() end, 'Debug test' },
+        h = { function() require("dapui").eval() end , 'Hover variable' },
+
+        -- diagnostics
+        n = { function() vim.lsp.diagnostic.goto_next({popup_opts={focusable=false,border='rounded'}}) end, 'Next diagnostics'},
+        p = { function() vim.lsp.diagnostic.goto_prev({popup_opts={focusable=false,border='rounded'}}) end, 'Prev diagnostics'},
+        l = { function() require'telescope.builtin'.lsp_document_diagnostics() end, 'List doc diagnostics'},
+        L = { function() require'telescope.builtin'.lsp_workspace_diagnostics() end, 'List workspace diagnostics'},
+  },
   },{ prefix = "<leader>" })
+
+-- Visual leader keymaps
+wk.register({
+  c = {':CommentToggle<CR>', 'Toggle comment'},
+  },{ prefix = "<leader>", mode = 'v'})
 
 wk.register({
     d = {'<Cmd>lua vim.lsp.buf.definition()<CR>', 'Go to definition'},
@@ -57,5 +91,5 @@ wk.register({
     r = { '<Cmd>:Telescope lsp_references<CR>', "Go to references" },
     i = { '<Cmd>:Telescope lsp_implementations<CR>', "Go to implementations" },
     h = { ':lua vim.lsp.buf.hover()<CR>', 'Hover docs'},
-}, { prefix = "g" })
+}, { prefix = "g", mode = 'n'})
 

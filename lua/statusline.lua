@@ -287,11 +287,12 @@ require'feline'.setup {
     -- colors = { bg = colors.bg, fg = colors.fg },
     components = components,
     vi_mode_colors = vi_mode_colors,
-    force_inactive = {
+    disable = {
         filetypes = {
             'packer',
             'NvimTree',
             'fugitive',
+            'dashboard',
             'fugitiveblame'
         },
         buftypes = {'terminal'},

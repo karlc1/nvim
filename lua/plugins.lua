@@ -1,4 +1,3 @@
-
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
@@ -30,7 +29,25 @@ return require('packer').startup(
 	requires = { 'nvim-lua/plenary.nvim' },
 	config = function()
 		require('telescope').setup{
-                    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+                    -- file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+                    defaults = {
+                        layout_config = {
+                            bottom_pane = {
+                                height = 50,
+                                prompt_position = "top"
+                            },
+                        },
+                        -- winblend = 10
+                    },
+                    pickers = {
+                        find_files = {
+                            theme = "dropdown",
+
+                        },
+                        live_grep = {
+                            theme = "ivy",
+                        }
+                    },
                 }
                 vim.api.nvim_exec(
                   [[
@@ -46,6 +63,7 @@ return require('packer').startup(
 
     -- Color and visuals
     use {'embark-theme/vim', opt = true}
+    use {"mcchrish/zenbones.nvim"}
 
     use {
         'kyazdani42/nvim-web-devicons',
@@ -93,6 +111,7 @@ return require('packer').startup(
         config = function()
             require'nvim-tree'.setup {
                 auto_close = true,
+                update_cwd = true,
                 view = {
                     auto_resize = true
                 },
@@ -101,7 +120,13 @@ return require('packer').startup(
     }
 
     -- Note taking
-    use {"vimwiki/vimwiki", opt = false}
+    use {
+            "vimwiki/vimwiki",
+            opt = false,
+            config = function()
+                vim.cmd[[let g:vimwiki_key_mappings = { 'all_maps': 0, }]]
+            end
+        }
 
     -- Treesitter
     use {
@@ -111,9 +136,12 @@ return require('packer').startup(
             require'nvim-treesitter.configs'.setup {
                 ensure_installed = "maintained",
                 highlight = {
-                enable = true,
-                additional_vim_regex_highlighting = false,
-            },
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+                indent = {
+                    enable = true
+                },
         }
         end
     }
@@ -256,7 +284,151 @@ return require('packer').startup(
         opt = false,
     }
 
+    use {
+        "rcarriga/vim-ultest",
+        requires = {"vim-test/vim-test"},
+        run = ":UpdateRemotePlugins",
+        config = function()
+            require("ultest").setup({})
+            vim.api.nvim_exec(
+              [[
+                hi UltestPass ctermfg=Green guifg=#96F291
+                hi UltestFail ctermfg=Red guifg=#F70067
+                hi UltestRunning ctermfg=Yellow guifg=#FFEC63
+                hi UltestBorder ctermfg=Red guifg=#F70067
+                hi UltestSummaryInfo ctermfg=cyan guifg=#00F1F5 gui=bold cterm=bold
+                hi link UltestSummaryFile UltestSummaryInfo
+                hi link UltestSummaryNamespace UltestSummaryInfo
+              ]], false)
 
+        end
+    }
+
+    -- wildmenu
+    use {
+        "gelguy/wilder.nvim",
+        run = ":UpdateRemotePlugins",
+        requires = {'romgrk/fzy-lua-native'},
+        config = function()
+            vim.api.nvim_exec([[
+            call wilder#setup({'modes': [':', '/', '?']})
+            call wilder#set_option('use_python_remote_plugin', 0)
+
+            call wilder#set_option('pipeline', [
+                  \   wilder#branch(
+                  \     wilder#cmdline_pipeline({
+                  \       'fuzzy': 1,
+                  \       'fuzzy_filter': wilder#lua_fzy_filter(),
+                  \     }),
+                  \     wilder#vim_search_pipeline(),
+                  \   ),
+                  \ ])
+
+            call wilder#set_option('renderer', wilder#wildmenu_renderer({
+                  \   'highlighter': wilder#lua_fzy_highlighter(),
+                  \   'highlights': {
+                  \       'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+                  \   },
+                  \ }))
+        ]], false)
+        end
+    }
+
+
+    -- dashboard
+    use {
+        "karlc1/dashboard-nvim",
+        opt = false,
+        config = function()
+            vim.g.dashboard_custom_header = {
+                '',
+                '   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣭⣿⣶⣿⣦⣼⣆               ',
+                '    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦             ',
+                '          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷⠄⠄⠄⠄⠻⠿⢿⣿⣧⣄           ',
+                '           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄          ',
+                '          ⢠⣿⣿⣿⠈  ⠡⠌⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀         ',
+                '   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘⠄ ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄        ',
+                '  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄         ',
+                ' ⣠⣿⠿⠛⠄⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄        ',
+                ' ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇⠄⠛⠻⢷⣄       ',
+                '      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆           ',
+                '       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃           ',
+                '     ⢰⣶  ⣶ ⢶⣆⢀⣶⠂⣶⡶⠶⣦⡄⢰⣶⠶⢶⣦  ⣴⣶           ',
+                '     ⢸⣿⠶⠶⣿ ⠈⢻⣿⠁ ⣿⡇ ⢸⣿⢸⣿⢶⣾⠏ ⣸⣟⣹⣧          ',
+                '     ⠸⠿  ⠿  ⠸⠿  ⠿⠷⠶⠿⠃⠸⠿⠄⠙⠷⠤⠿⠉⠉⠿⠆         ',
+                }
+            vim.g.dashboard_default_executive = 'telescope'
+            -- vim.g.dashboard_preview_command = 'cat'
+            -- vim.g.dashboard_preview_pipeline = 'lolcat'
+            vim.g.dashboard_custom_footer = {''}
+            vim.g.dashboard_custom_section = {
+                a = {description = {'    Find File          '}, command = 'lua require\'telescope.builtin\'.find_files(require(\'telescope.themes\').get_dropdown({ winblend = 0, previewer=false, layout_config = { height= 100 } }))'},
+                b = {description = {'    Recent Files       '}, command = 'Telescope oldfiles'},
+                c = {description = {'    Find Word          '}, command = 'Telescope live_grep'},
+                d = {description = {'  ✎  Nvim Config        '}, command = ':cd ~/.config/nvim | :e init.lua'},
+                e = {description = {'  ✎  Plugin Config      '}, command = ':cd ~/.config/nvim | :e lua/plugins.lua'},
+                f = {description = {'  ✎  Keymapping Config  '}, command = ':cd ~/.config/nvim | :e lua/keymappings.lua'},
+            }
+            vim.cmd[[autocmd FileType dashboard setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=  | autocmd WinLeave <buffer> set showtabline=2 ]]
+
+            vim.cmd[[hi! link dashboardHeader String]]
+            vim.cmd[[hi! link dashboardCenter Type]]
+
+
+        end
+    }
+
+    -- debugging
+    use {
+        'mfussenegger/nvim-dap',
+        opt = false,
+        config = function()
+            -- setup highlights for debug symbols
+            vim.cmd[[exec 'hi DebugBreakpoint guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('Error'),'fg')]]
+            vim.cmd[[exec 'hi DebugStopped guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('WarningMsg'),'fg')]]
+            vim.fn.sign_define('DapBreakpoint', {text='⊚', texthl='DebugBreakpoint', linehl='', numhl=''})
+            vim.fn.sign_define('DapStopped', {text='→', texthl='DebugStopped', linehl='Visual', numhl=''})
+        end
+    }
+
+    use {
+        'leoluz/nvim-dap-go',
+        opt = false,
+        config = function()
+            require('dap-go').setup()
+        end
+    }
+
+    use {
+        'rcarriga/nvim-dap-ui',
+        opt = false,
+        config = function()
+            require("dapui").setup({
+                sidebar = {
+                    -- You can change the order of elements in the sidebar
+                    elements = {
+                      -- Provide as ID strings or tables with "id" and "size" keys
+                        {
+                            id = "scopes",
+                            size = 0.65, -- Can be float or integer > 1
+                        },
+                        { id = "breakpoints", size = 0.35 },
+                    },
+                    size = 60,
+                    position = "left", -- Can be "left", "right", "top", "bottom"
+                },
+                windows = { indent = 1 },
+            })
+        end
+    }
+
+    use {
+        'theHamsta/nvim-dap-virtual-text',
+        opt = false,
+        -- config = function()
+        --     vim.g.dap_virtual_text = true
+        -- end
+    }
 
   end
 )

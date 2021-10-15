@@ -3,9 +3,9 @@ require('plugins')
 require('keymappings')
 require('lsp')
 require('statusline')
-
 -- LSP
 -- require('lsp.go')
+-- asdf
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme embark')
@@ -23,6 +23,8 @@ vim.cmd('set cmdheight=1')
 
 -- Set space as leader
 vim.g.mapleader = ' '
+
+print(vim.bo.filetype)
 
 -- Wrap long lines, but don't break in middle of words
 vim.cmd('set wrap linebreak nolist')
@@ -67,6 +69,7 @@ vim.cmd('nmap ¤ :silent exec "! setxkbmap us &" <CR>$')
 
 -- Set indentation levels
 vim.cmd[[autocmd FileType * setlocal shiftwidth=4 softtabstop=4 expandtab]]
+vim.cmd[[autocmd FileType go setlocal shiftwidth=8 softtabstop=8 expandtab]]
 
 -- Make indentation repeatable
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true, silent = true})
@@ -94,6 +97,9 @@ vim.api.nvim_set_keymap('x', 'x', '"_x', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'c', '"_c', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('v', 'c', '"_c', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('x', 'c', '"_c', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'C', '"_C', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', 'C', '"_C', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('x', 'C', '"_C', {noremap = true, silent = true})
 
 -- Fix pum dropdown
 -- vim.api.nvim_exec([[
