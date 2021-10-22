@@ -251,10 +251,18 @@ return require('packer').startup(
                         end
                     end
                 },
-                sources = {
+                -- sources = {
+                -- { name = 'nvim_lsp' },
+                -- { name = 'buffer' },
+                -- }
+                sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
-                 -- { name = 'buffer' },
-                }
+                    { name = 'path' },
+                    -- { name = 'emoji' },
+                    -- { name = 'vsnip' },
+                    }, {
+                    { name = 'buffer' },
+                    })
             })
         end
     }
