@@ -64,6 +64,9 @@ return require('packer').startup(
     -- Color and visuals
     use {'embark-theme/vim', opt = true}
     use {"mcchrish/zenbones.nvim"}
+    use {
+            "Shatur/neovim-ayu"
+    }
 
     use {
         'kyazdani42/nvim-web-devicons',
@@ -178,12 +181,16 @@ return require('packer').startup(
         end
     }
 
+    -- Snippets
+    use { "L3MON4D3/LuaSnip" }
+
     -- Completion
     use {
         'hrsh7th/nvim-cmp',
 	requires = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
+            'saadparwaiz1/cmp_luasnip',
         },
         opt = false,
         config = function()
@@ -191,6 +198,13 @@ return require('packer').startup(
             local cmp = require('cmp')
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
+
+                snippet = {
+                    expand = function(args)
+                        require'luasnip'.lsp_expand(args.body)
+                    end
+                },
+
                 completion = {
                     autocomplete = false,
                     completion = {
@@ -212,15 +226,16 @@ return require('packer').startup(
                         -- cmp.config.compare.order,
                     }
                 },
+
                 mapping = {
                     ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                    ['<C-e>'] = cmp.mapping.close(),
+                    ['<C-u>'] = cmp.mapping.scroll_docs(-1),
+                    ['<C-d>'] = cmp.mapping.scroll_docs(1),
+                    ['<ESC>'] = cmp.mapping.abort(),
                     ['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
                     ['<TAB>'] = function(fallback)
                         local col = vim.fn.col('.') - 1
-                        if vim.fn.pumvisible() == 1 then
+                        if cmp.visible() then
                             cmp.select_next_item()
                         elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
                             fallback()
@@ -229,7 +244,7 @@ return require('packer').startup(
                         end
                     end,
                     ['<S-TAB>'] = function(fallback)
-                        if vim.fn.pumvisible() == 1 then
+                        if cmp.visible() then
                             cmp.select_prev_item()
                         else
                             fallback()
@@ -278,6 +293,14 @@ return require('packer').startup(
         end
     }
 
+    use {
+        "folke/todo-comments.nvim",
+        requires = "nvim-lua/plenary.nvim",
+        config = function()
+            require("todo-comments").setup{}
+        end
+    }
+
     -- Status line
     use {
         'famiu/feline.nvim',
@@ -310,9 +333,16 @@ return require('packer').startup(
         run = ":UpdateRemotePlugins",
         requires = {'romgrk/fzy-lua-native'},
         config = function()
+            -- call wilder#setup({'modes': [':', '/', '?']})
             vim.api.nvim_exec([[
-            call wilder#setup({'modes': [':', '/', '?']})
+
+            call wilder#setup({
+                \ 'modes': [':', '/', '?'],
+                \ 'enable_cmdline_enter': 0,
+                \ })
+
             call wilder#set_option('use_python_remote_plugin', 0)
+            call wilder#set_option('noselect', 1)
 
             call wilder#set_option('pipeline', [
                   \   wilder#branch(
@@ -324,12 +354,13 @@ return require('packer').startup(
                   \   ),
                   \ ])
 
-            call wilder#set_option('renderer', wilder#wildmenu_renderer({
+            call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+                  \ 'border': 'rounded',
                   \   'highlighter': wilder#lua_fzy_highlighter(),
                   \   'highlights': {
                   \       'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
                   \   },
-                  \ }))
+                  \ })))
         ]], false)
         end
     }
@@ -362,6 +393,7 @@ return require('packer').startup(
             -- vim.g.dashboard_preview_pipeline = 'lolcat'
             vim.g.dashboard_custom_footer = {''}
             vim.g.dashboard_custom_section = {
+
                 a = {description = {'    Find File          '}, command = 'lua require\'telescope.builtin\'.find_files(require(\'telescope.themes\').get_dropdown({ winblend = 0, previewer=false, layout_config = { height= 100 } }))'},
                 b = {description = {'    Recent Files       '}, command = 'Telescope oldfiles'},
                 c = {description = {'    Find Word          '}, command = 'Telescope live_grep'},
@@ -429,6 +461,32 @@ return require('packer').startup(
         --     vim.g.dap_virtual_text = true
         -- end
     }
+
+    -- stabilize window
+    use {
+	'luukvbaal/stabilize.nvim',
+	config = function() require("stabilize").setup() end
+    }
+
+    -- mini plugins
+        --
+    use {
+        'echasnovski/mini.nvim',
+        required = true,
+        config = function()
+            require('mini.bufremove').setup({})
+        end
+    }
+
+    -- diagnostics (defer diagnostics when not in normal mode)
+    use {
+        'https://gitlab.com/yorickpeterse/nvim-dd',
+        required = true,
+        config = function()
+            require('dd').setup({timeout = 250})
+        end
+    }
+
 
   end
 )

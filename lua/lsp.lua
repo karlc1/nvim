@@ -13,7 +13,8 @@ handlers["textDocument/signatureHelp"] = lsp.with(handlers.signature_help, pop_o
 DATA_PATH = vim.fn.stdpath('data')
 CACHE_PATH = vim.fn.stdpath('cache')
 
-local go_capabilities = vim.lsp.protocol.make_client_capabilities()
+-- local go_capabilities = vim.lsp.protocol.make_client_capabilities()
+local go_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 go_capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = {
     'documentation',

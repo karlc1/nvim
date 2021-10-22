@@ -6,7 +6,8 @@ vim.api.nvim_set_keymap('n', 's', ":HopChar1<CR>", {noremap = true, silent = tru
 -- Cycle and kill buffers
 vim.api.nvim_set_keymap('n', 'H', ':BufferLineCyclePrev<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'L', ':BufferLineCycleNext<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', 'X', ':bw!<CR>', {noremap = true, silent = true})
+
+vim.api.nvim_set_keymap('n', 'X', ': lua MiniBufremove.delete()<cr>', {noremap = true, silent = true})
 
 -- Navigate splits withuot pressing <C-w> first
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true, silent = true})
@@ -35,13 +36,6 @@ wk.register({
     t = { function() require'telescope.builtin'.live_grep() end, 'Search any text'},
 
   },
-  -- D = {
-  --   name = "Diagnostics",
-  --   n = { function() vim.lsp.diagnostic.goto_next({popup_opts={focusable=false,border='rounded'}}) end, 'Next diagnostics'},
-  --   p = { function() vim.lsp.diagnostic.goto_prev({popup_opts={focusable=false,border='rounded'}}) end, 'Prev diagnostics'},
-  --   l = { function() require'telescope.builtin'.lsp_document_diagnostics() end, 'List doc diagnostics'},
-  --   L = { function() require'telescope.builtin'.lsp_workspace_diagnostics() end, 'List workspace diagnostics'},
-  -- },
 
   f = { function() require'telescope.builtin'.find_files() end, 'Find files' },
   F = { function() require'telescope.builtin'.find_files({hidden=true}) end, 'Find files including hidden' },
@@ -85,11 +79,11 @@ wk.register({
   },{ prefix = "<leader>", mode = 'v'})
 
 wk.register({
-    d = {'<Cmd>lua vim.lsp.buf.definition()<CR>', 'Go to definition'},
-    s = { '<Cmd>sp | lua vim.lsp.buf.definition()<cr>', 'Go do def in split'},
-    v = { '<cmd>vsp | lua vim.lsp.buf.definition()<cr>', 'Go to dev in vsplit'},
-    r = { '<Cmd>:Telescope lsp_references<CR>', "Go to references" },
-    i = { '<Cmd>:Telescope lsp_implementations<CR>', "Go to implementations" },
-    h = { ':lua vim.lsp.buf.hover()<CR>', 'Hover docs'},
+    d = { function() vim.lsp.buf.definition() end, 'Go to definition'},
+    s = { function() vim.cmd('sp') vim.lsp.buf.definition() end, 'Go do def in split'},
+    v = { function() vim.cmd('vsp') vim.lsp.buf.definition() end, 'Go to dev in vsplit'},
+    r = { function() require'telescope.builtin'.lsp_references() end, 'Go to references'},
+    i = { function() require'telescope.builtin'.lsp_implementation() end, 'Go to implementations'},
+    h = { function() vim.lsp.buf.hover() end, 'Hover docs'},
 }, { prefix = "g", mode = 'n'})
 

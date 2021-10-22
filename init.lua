@@ -5,7 +5,6 @@ require('lsp')
 require('statusline')
 -- LSP
 -- require('lsp.go')
--- asdf
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme embark')
@@ -14,7 +13,12 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.bo.expandtab = true
 vim.bo.smartindent = true
+vim.o.smartindent = true
+vim.bo.autoindent = true
+vim.o.autoindent = true
+vim.o.smarttab = true
 vim.wo.signcolumn = "yes"
+
 vim.cmd('set ignorecase')
 vim.cmd('set smartcase')
 vim.wo.number = true
