@@ -1,4 +1,6 @@
 
+vim.o.termguicolors = true
+
 require('plugins')
 require('keymappings')
 require('lsp')
@@ -6,7 +8,6 @@ require('statusline')
 -- LSP
 -- require('lsp.go')
 
-vim.o.termguicolors = true
 vim.cmd('colorscheme embark')
 
 vim.o.splitbelow = true
