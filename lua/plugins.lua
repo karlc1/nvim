@@ -29,23 +29,34 @@ return require('packer').startup(
 	requires = { 'nvim-lua/plenary.nvim' },
 	config = function()
 		require('telescope').setup{
-                    -- file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+
                     defaults = {
+                        winblend = 0,
+                        layout_strategy = 'flex',
                         layout_config = {
-                            bottom_pane = {
-                                height = 50,
-                                prompt_position = "top"
-                            },
+                            preview_cutoff = 10,
+                            prompt_position = 'top',
                         },
-                        -- winblend = 10
                     },
+
+
                     pickers = {
                         find_files = {
                             theme = "dropdown",
+                            previewer = false,
+                            layout_config = {
+                                height = 0.5,
+                            },
 
                         },
                         live_grep = {
                             theme = "ivy",
+                            layout_config = {
+                                height = 0.6,
+                                width = 0.95,
+                                preview_cutoff = 10,
+                                prompt_position = 'bottom',
+                            },
                         }
                     },
                 }
@@ -57,7 +68,8 @@ return require('packer').startup(
                   highlight TelescopePromptBorder   gui=bold
                   highlight TelescopeResultsBorder  gui=bold
                   highlight TelescopePreviewBorder  guifg=#ffffff
-                  ]], false)
+                  highlight TelescopeTitle          guifg=#ffffff
+                  ]], true)
 	end,
     }
 
