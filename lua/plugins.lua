@@ -185,12 +185,15 @@ return require('packer').startup(
     use { "L3MON4D3/LuaSnip" }
 
     -- Completion
+        --
     use {
         'hrsh7th/nvim-cmp',
 	requires = {
+            'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
             'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-path'
         },
         opt = false,
         config = function()
@@ -258,11 +261,16 @@ return require('packer').startup(
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                     { name = 'path' },
+                    { name = 'cmp-nvim-lua' },
                     -- { name = 'emoji' },
                     -- { name = 'vsnip' },
                     }, {
                     { name = 'buffer' },
-                    })
+                    }),
+
+                    experimental = {
+                        ghost_text = true,
+                    },
             })
         end
     }
@@ -494,6 +502,38 @@ return require('packer').startup(
             require('dd').setup({timeout = 250})
         end
     }
+
+    -- plantuml
+    use { 'aklt/plantuml-syntax' }
+
+    use {
+        "folke/twilight.nvim",
+        config = function()
+            require("twilight").setup {
+                context = 100,
+            }
+        end
+    }
+
+    use {
+    "folke/zen-mode.nvim",
+    config = function()
+        require("zen-mode").setup {
+            window = {
+                backdrop = 1,
+                options = {
+                    signcolumn = "no",
+                    number = false,
+                    relativenumber = false,
+                },
+            },
+            plugins = {
+                twilight = { enabled = false }
+            }
+        }
+    end
+}
+
 
 
   end
