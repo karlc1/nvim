@@ -40,10 +40,14 @@ wk.register({
   f = { function() require'telescope.builtin'.find_files() end, 'Find files' },
   F = { function() require'telescope.builtin'.find_files({hidden=true}) end, 'Find files including hidden' },
 
+  W = { ':VimwikiIndex<CR>', 'Open VimWIki'},
+
   e = {':NvimTreeFindFile<CR>', 'Open Tree View'},
   c = {':CommentToggle<CR>', 'Toggle comment' },
 
   w = {':w <cr>', 'Write file' },
+
+  z = { function() require'zen-mode'.toggle() end, 'Zen Mode'},
 
   t = {
       name = "Test",
@@ -83,7 +87,7 @@ wk.register({
     s = { function() vim.cmd('sp') vim.lsp.buf.definition() end, 'Go do def in split'},
     v = { function() vim.cmd('vsp') vim.lsp.buf.definition() end, 'Go to dev in vsplit'},
     r = { function() require'telescope.builtin'.lsp_references() end, 'Go to references'},
-    i = { function() require'telescope.builtin'.lsp_implementation() end, 'Go to implementations'},
+    i = { function() require'telescope.builtin'.lsp_implementations() end, 'Go to implementations'},
     h = { function() vim.lsp.buf.hover() end, 'Hover docs'},
 }, { prefix = "g", mode = 'n'})
 
