@@ -22,9 +22,6 @@ vim.api.nvim_set_keymap('n', 'K', '1<C-y>', {noremap = true, silent = true})
 -- Disable highlight on <ESC>
 vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC>', {noremap = true, silent = true})
 
--- cmd mode on ;
-vim.api.nvim_set_keymap('n', ';', ':', {noremap = true, silent = true})
-
 -- Normal leader keymaps
 wk.register({
   s = {
@@ -50,7 +47,8 @@ wk.register({
   z = { function() require'zen-mode'.toggle() end, 'Zen Mode'},
 
   t = {
-      name = "Test",
+      name = "Test and terminal",
+      t = {': ToggleTerm<CR>', 'Toggle terminal'},
       n = { ':UltestNearest<CR>', 'Test nearest'},
       f = { ':Ultest<CR>', 'Test file'},
       s = { ':UltestSummary<CR>', 'Toggle summary'},
@@ -64,7 +62,9 @@ wk.register({
         b = { function() require'dap'.toggle_breakpoint() end, 'Toggle breakpoint'},
         c = { function() require'dap'.continue() end, 'Continue' },
         o = { function() require'dap'.step_over() end, 'Step over' },
+        O = { function() require'dap'.step_out() end, 'Step out' },
         i = { function() require'dap'.step_into() end, 'Step into' },
+        r = { function() require'dap'.run_last() end, 'Run last' },
         u = { function() require("dapui").toggle() end, 'Toggle UI' },
         t = { function() require('dap-go').debug_test() end, 'Debug test' },
         h = { function() require("dapui").eval() end , 'Hover variable' },
