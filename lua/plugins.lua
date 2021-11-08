@@ -1,7 +1,6 @@
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
-
 vim.cmd[[augroup packer_user_config
   autocmd!
   autocmd BufWritePost plugins.lua source <afile> | PackerCompile
@@ -75,7 +74,11 @@ return require('packer').startup(
 
     -- Color and visuals
     use {'embark-theme/vim', opt = true}
-    use {"mcchrish/zenbones.nvim"}
+    use {
+            "mcchrish/zenbones.nvim",
+            requires = "rktjmp/lush.nvim"
+
+        }
     use {
             "Shatur/neovim-ayu"
     }
@@ -200,6 +203,9 @@ return require('packer').startup(
         --
     use {
         'hrsh7th/nvim-cmp',
+
+        -- commit = "ab7f3685475923385a22abc427fe3d2fbb9d0a97",
+
 	requires = {
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-nvim-lsp',
@@ -210,7 +216,10 @@ return require('packer').startup(
         opt = false,
         config = function()
             vim.api.nvim_exec([[set pumheight=10]], false)
+
             local cmp = require('cmp')
+            local luasnip = require('luasnip')
+
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
 
@@ -248,10 +257,15 @@ return require('packer').startup(
                     ['<C-d>'] = cmp.mapping.scroll_docs(1),
                     ['<ESC>'] = cmp.mapping.abort(),
                     ['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
-                    ['<TAB>'] = function(fallback)
+
+                    ['<Tab>'] = function(fallback)
+
                         local col = vim.fn.col('.') - 1
+
                         if cmp.visible() then
                             cmp.select_next_item()
+                        elseif luasnip and luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
                         elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
                             fallback()
                         else
@@ -265,6 +279,7 @@ return require('packer').startup(
                             fallback()
                         end
                     end
+
                 },
                 -- sources = {
                 -- { name = 'nvim_lsp' },
@@ -528,23 +543,50 @@ return require('packer').startup(
     }
 
     use {
-    "folke/zen-mode.nvim",
-    config = function()
-        require("zen-mode").setup {
-            window = {
-                backdrop = 1,
-                options = {
-                    signcolumn = "no",
-                    number = false,
-                    relativenumber = false,
+        "folke/zen-mode.nvim",
+        config = function()
+            require("zen-mode").setup {
+                window = {
+                    backdrop = 1,
+                    options = {
+                        signcolumn = "no",
+                        number = false,
+                        relativenumber = false,
+                    },
                 },
-            },
-            plugins = {
-                twilight = { enabled = false }
+                plugins = {
+                    twilight = { enabled = false }
+                }
             }
-        }
-    end
-}
+        end
+    }
+
+    use {
+        "akinsho/toggleterm.nvim",
+        opt = false,
+        config = function()
+            require("toggleterm").setup{
+                -- open_mapping = [[<c-t>]],
+                shading_factor = 1,
+                close_on_exit = true,
+            }
+
+            function _G.set_terminal_keymaps()
+                local opts = {noremap = true}
+                vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
+                -- vim.api.nvim_buf_set_keymap(0, 't', 'jk', [[<C-\><C-n>]], opts)
+                vim.api.nvim_buf_set_keymap(0, 't', '<C-h>', [[<C-\><C-n><C-W>h]], opts)
+                vim.api.nvim_buf_set_keymap(0, 't', '<C-j>', [[<C-\><C-n><C-W>j]], opts)
+                vim.api.nvim_buf_set_keymap(0, 't', '<C-k>', [[<C-\><C-n><C-W>k]], opts)
+                vim.api.nvim_buf_set_keymap(0, 't', '<C-l>', [[<C-\><C-n><C-W>l]], opts)
+            end
+            -- if you only want these mappings for toggle term use term://*toggleterm#* instead
+            vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+
+        end
+    }
+
+
 
 
 
