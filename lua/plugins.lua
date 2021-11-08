@@ -192,6 +192,7 @@ return require('packer').startup(
         "phaazon/hop.nvim",
         opt = false,
         config = function()
+            require'hop'.setup()
             require'hop.highlight'.insert_highlights()
         end
     }
@@ -219,6 +220,9 @@ return require('packer').startup(
 
             local cmp = require('cmp')
             local luasnip = require('luasnip')
+            luasnip.config.set_config({
+                history = false,
+            })
 
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
@@ -264,15 +268,15 @@ return require('packer').startup(
 
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif luasnip and luasnip.expand_or_jumpable() then
-                            luasnip.expand_or_jump()
+                        -- elseif luasnip and luasnip.expand_or_jumpable() then
+                        --     luasnip.expand_or_jump()
                         elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
                             fallback()
                         else
                             cmp.complete()
                         end
                     end,
-                    ['<S-TAB>'] = function(fallback)
+                    ['<S-Tab>'] = function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
                         else

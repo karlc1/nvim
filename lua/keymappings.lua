@@ -22,6 +22,13 @@ vim.api.nvim_set_keymap('n', 'K', '1<C-y>', {noremap = true, silent = true})
 -- Disable highlight on <ESC>
 vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC>', {noremap = true, silent = true})
 
+
+-- Jump to snippet locations
+vim.api.nvim_set_keymap('i', '<C-l>', '<cmd>lua require(\'luasnip\').jump(1)<Cr>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('s', '<C-l>', '<cmd>lua require(\'luasnip\').jump(1)<Cr>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-h>', '<cmd>lua require(\'luasnip\').jump(-1)<Cr>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('s', '<C-h>', '<cmd>lua require(\'luasnip\').jump(-1)<Cr>', {noremap = true, silent = true})
+
 -- Normal leader keymaps
 wk.register({
   s = {
