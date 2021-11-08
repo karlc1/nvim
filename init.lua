@@ -113,3 +113,6 @@ vim.api.nvim_set_keymap('x', 'C', '"_C', {noremap = true, silent = true})
 
 -- Do not jump when highlighting with '*'
 vim.cmd('nnoremap <silent> * :let @/ = \'<c-r><c-w>\' \\| set hlsearch<cr>')
+
+-- source colors (replace with lua once nvim supports it)
+vim.cmd('source ~/.config/nvim/vimscript/colors.vim')
