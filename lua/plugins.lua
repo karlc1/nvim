@@ -1,4 +1,4 @@
--- Only required if you have packer configured as `opt`
+
 vim.cmd [[packadd packer.nvim]]
 
 vim.cmd[[augroup packer_user_config
@@ -16,7 +16,7 @@ return require('packer').startup(
     -- LSP
     use {"neovim/nvim-lspconfig", opt = false}
     use {
-        "kabouzeid/nvim-lspinstall",
+        'williamboman/nvim-lsp-installer',
         opt = false,
     }
     use { "ray-x/lsp_signature.nvim" , opt = false }
@@ -27,6 +27,7 @@ return require('packer').startup(
         'nvim-telescope/telescope.nvim',
 	requires = { 'nvim-lua/plenary.nvim' },
 	config = function()
+
 		require('telescope').setup{
 
                     defaults = {
@@ -56,6 +57,16 @@ return require('packer').startup(
                                 preview_cutoff = 10,
                                 prompt_position = 'bottom',
                             },
+                        },
+                        lsp_document_symbols = {
+                            theme = "dropdown",
+                            previewer = false,
+                            layout_config = {
+                                height = 0.5,
+                                width = 60,
+                            },
+                            symbol_width = 45,
+                            symbol_type_width = 100
                         }
                     },
                 }
@@ -68,6 +79,10 @@ return require('packer').startup(
                   highlight TelescopeResultsBorder  gui=bold
                   highlight TelescopePreviewBorder  guifg=#ffffff
                   highlight TelescopeTitle          guifg=#ffffff
+
+                  highlight link TelescopeResultsStruct structure
+                  highlight link TelescopeResultsMethod string
+                  highlight link TelescopePromptTitle string
                   ]], true)
 	end,
     }
@@ -142,7 +157,7 @@ return require('packer').startup(
             "vimwiki/vimwiki",
             opt = false,
             config = function()
-                vim.cmd[[let g:vimwiki_key_mappings = { 'all_maps': 0, }]]
+                -- vim.cmd[[let g:vimwiki_key_mappings = { 'all_maps': 0, }]]
             end
         }
 
@@ -198,7 +213,20 @@ return require('packer').startup(
     }
 
     -- Snippets
-    use { "L3MON4D3/LuaSnip" }
+    use {
+        "L3MON4D3/LuaSnip",
+        config = function()
+            -- local luasnip = require('luasnip')
+            -- luasnip.config.set_config({
+            --     history = false,
+            -- })
+
+            require'luasnip/loaders/from_vscode'.lazy_load({ paths = {"~/.config/nvim/snippets"} })
+
+        end
+    }
+
+    use 'rafamadriz/friendly-snippets'
 
     -- Completion
         --
@@ -219,10 +247,6 @@ return require('packer').startup(
             vim.api.nvim_exec([[set pumheight=10]], false)
 
             local cmp = require('cmp')
-            local luasnip = require('luasnip')
-            luasnip.config.set_config({
-                history = false,
-            })
 
             cmp.setup({
                 preselect = cmp.PreselectMode.None,
@@ -292,6 +316,11 @@ return require('packer').startup(
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                     { name = 'path' },
+
+                    -- ?
+                    { name = 'luasnip' },
+                    { name = 'cmp-luasnip' },
+
                     { name = 'cmp-nvim-lua' },
                     -- { name = 'emoji' },
                     -- { name = 'vsnip' },
@@ -570,9 +599,10 @@ return require('packer').startup(
         opt = false,
         config = function()
             require("toggleterm").setup{
-                -- open_mapping = [[<c-t>]],
+                open_mapping = [[<c-t>]],
                 shading_factor = 1,
                 close_on_exit = true,
+                size = vim.o.lines * 0.4,
             }
 
             function _G.set_terminal_keymaps()
@@ -590,9 +620,69 @@ return require('packer').startup(
         end
     }
 
+    use {
+        "ldelossa/calltree.nvim",
+        opt = false,
+        config = function()
+            require('calltree').setup({
+                layout = "bottom",
+            })
+        end
+    }
 
+    use {
+        'VonHeikemen/fine-cmdline.nvim',
+        requires = {
+            {'MunifTanjim/nui.nvim'}
+        },
+        config = function()
+            require('fine-cmdline').setup({
+                cmdline = {
+                    enable_keymaps = true,
+                    smart_history = true
+                },
+                popup = {
+                    relative = 'editor',
+                    position = {
+                        row = '30%',
+                        col = '50%',
+                    },
+                    size = '40%',
+                    border = {
+                        style = 'rounded',
+                        highlight = 'String',
+                    },
+                },
+            })
 
+        end
+    }
 
+    use {
+        'VonHeikemen/searchbox.nvim',
+        requires = {
+            {'MunifTanjim/nui.nvim'}
+        },
+        config = function()
+            require('searchbox').setup({
+                popup = {
+                    relative = 'editor',
+                    position = {
+                        row =  '30%',
+                        col = '50%',
+                    },
+                    size = '40%',
+                    win_options = {
+                        winhighlight = 'Normal:Normal',
+                    },
+                    border = {
+                        style = 'rounded',
+                        highlight = 'String',
+                    },
+                },
+            })
+        end
+    }
 
   end
 )

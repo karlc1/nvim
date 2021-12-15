@@ -23,6 +23,25 @@ go_capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
+
+local lsp_installer = require("nvim-lsp-installer")
+
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+lsp_installer.on_server_ready(function(server)
+    local opts = {}
+
+    -- (optional) Customize the options passed to the server
+    -- if server.name == "tsserver" then
+    --     opts.root_dir = function() ... end
+    -- end
+
+    -- This setup() function is exactly the same as lspconfig's setup function.
+    -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+    server:setup(opts)
+end)
+
+
 require'lspconfig'.clangd.setup{
     capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
 
@@ -110,6 +129,33 @@ require'lspconfig'.yamlls.setup{
                 },
 	},
 }
+
+require'lspconfig'.pyright.setup {
+    cmd = {DATA_PATH .. "/lspinstall/python/node_modules/.bin/pyright-langserver", "--stdio"},
+    on_attach = function(client, bufnr)
+        require'lsp_signature'.on_attach(cfg)
+    end,
+    -- on_attach = require'lsp'.common_on_attach,
+--     handlers = {
+--         ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+--             virtual_text = O.python.diagnostics.virtual_text,
+--             signs = O.python.diagnostics.signs,
+--             underline = O.python.diagnostics.underline,
+--             update_in_insert = true
+-- 
+--         })
+--     },
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = "workspace",
+          useLibraryCodeForTypes = true
+        }
+      }
+    }
+}
+
 
 
 -- Organize imports and format on save

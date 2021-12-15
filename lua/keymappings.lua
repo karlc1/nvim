@@ -20,7 +20,19 @@ vim.api.nvim_set_keymap('n', 'J', '1<C-e>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'K', '1<C-y>', {noremap = true, silent = true})
 
 -- Disable highlight on <ESC>
-vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC> :SearchBoxClear<CR>', {noremap = true, silent = true})
+
+
+-- Use find-cmdline plugin for ex commands
+vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
+
+-- use searchbox plugin for incsearch
+vim.api.nvim_set_keymap(
+  'n',
+  '/',
+  ':SearchBoxMatchAll<CR>',
+  {noremap = true}
+)
 
 
 -- Jump to snippet locations
@@ -79,8 +91,8 @@ wk.register({
         -- diagnostics
         n = { function() vim.lsp.diagnostic.goto_next({popup_opts={focusable=false,border='rounded'}}) end, 'Next diagnostics'},
         p = { function() vim.lsp.diagnostic.goto_prev({popup_opts={focusable=false,border='rounded'}}) end, 'Prev diagnostics'},
-        l = { function() require'telescope.builtin'.lsp_document_diagnostics() end, 'List doc diagnostics'},
-        L = { function() require'telescope.builtin'.lsp_workspace_diagnostics() end, 'List workspace diagnostics'},
+        l = { function() require'telescope.builtin'.diagnostics({ bufnr = 0 }) end, 'List doc diagnostics'},
+        L = { function() require'telescope.builtin'.diagnostics() end, 'List all buffers diagnostics'},
   },
   },{ prefix = "<leader>" })
 
@@ -96,5 +108,8 @@ wk.register({
     r = { function() require'telescope.builtin'.lsp_references() end, 'Go to references'},
     i = { function() require'telescope.builtin'.lsp_implementations() end, 'Go to implementations'},
     h = { function() vim.lsp.buf.hover() end, 'Hover docs'},
+
+    I = { function() vim.lsp.buf.incoming_calls() end, 'Incoming calls'},
+    O = { function() vim.lsp.buf.outgoing_calls() end, 'Incoming calls'},
 }, { prefix = "g", mode = 'n'})
 

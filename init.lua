@@ -98,13 +98,19 @@ vim.cmd('set clipboard=unnamedplus')
 -- No not copy text when deleting with 'x' or 'c'
 vim.api.nvim_set_keymap('n', 'x', '"_x', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('v', 'x', '"_x', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('x', 'x', '"_x', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('x', 'x', '"_x', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'c', '"_c', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('v', 'c', '"_c', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('x', 'c', '"_c', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('x', 'c', '"_c', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'C', '"_C', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('v', 'C', '"_C', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('x', 'C', '"_C', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('x', 'C', '"_C', {noremap = true, silent = true})
+
+-- Workarund for snippet jumping/select
+vim.api.nvim_set_keymap('s', 'C', 'C', {noremap = false, silent = true})
+vim.api.nvim_set_keymap('s', 'c', 'c', {noremap = false, silent = true})
+vim.api.nvim_set_keymap('s', 'X', 'X', {noremap = false, silent = true})
+vim.api.nvim_set_keymap('s', 'x', 'x', {noremap = false, silent = true})
 
 -- Fix pum dropdown
 -- vim.api.nvim_exec([[
