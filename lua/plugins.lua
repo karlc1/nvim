@@ -167,7 +167,7 @@ return require('packer').startup(
         run = ":TSUpdate",
         config = function()
             require'nvim-treesitter.configs'.setup {
-                ensure_installed = "maintained",
+                ensure_installed = {"go", "norg", "norg_meta", "norg_table"},
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = false,
@@ -316,6 +316,7 @@ return require('packer').startup(
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                     { name = 'path' },
+                    { name = "neorg" },
 
                     -- ?
                     { name = 'luasnip' },
@@ -369,17 +370,17 @@ return require('packer').startup(
         end
     }
 
-    use {
-        "folke/todo-comments.nvim",
-        requires = "nvim-lua/plenary.nvim",
-        config = function()
-            require("todo-comments").setup{}
-        end
-    }
+--    use {
+--        "folke/todo-comments.nvim",
+--        requires = "nvim-lua/plenary.nvim",
+--        config = function()
+--            require("todo-comments").setup{}
+--        end
+--    }
 
     -- Status line
     use {
-        'famiu/feline.nvim',
+        'feline-nvim/feline.nvim', --tag = 'v0.3.3',
         opt = false,
     }
 
@@ -620,15 +621,15 @@ return require('packer').startup(
         end
     }
 
-    use {
-        "ldelossa/calltree.nvim",
-        opt = false,
-        config = function()
-            require('calltree').setup({
-                layout = "bottom",
-            })
-        end
-    }
+--    use {
+--        "ldelossa/calltree.nvim",
+--        opt = false,
+--        config = function()
+--            require('calltree').setup({
+--                layout = "bottom",
+--            })
+--        end
+--    }
 
     use {
         'VonHeikemen/fine-cmdline.nvim',
@@ -681,6 +682,78 @@ return require('packer').startup(
                     },
                 },
             })
+        end
+    }
+
+    use {
+        "nvim-neorg/neorg",
+        branch = "main",
+        config = function()
+
+
+            local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+
+            parser_configs.norg = {
+                install_info = {
+                    url = "https://github.com/nvim-neorg/tree-sitter-norg",
+                    files = { "src/parser.c", "src/scanner.cc" },
+                    branch = "main"
+                },
+            }
+
+            parser_configs.norg_meta = {
+                install_info = {
+                    url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
+                    files = { "src/parser.c" },
+                    branch = "main"
+                },
+            }
+
+            parser_configs.norg_table = {
+                install_info = {
+                    url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
+                    files = { "src/parser.c" },
+                    branch = "main"
+                },
+            }
+
+            require('neorg').setup {
+                -- Tell Neorg what modules to load
+                load = {
+                    ["core.defaults"] = {}, -- Load all the default modules
+                    ["core.norg.concealer"] = {}, -- Allows for use of icons
+                    ["core.norg.dirman"] = { -- Manage your directories with Neorg
+                        config = {
+                            workspaces = {
+                                my_workspace = "~/neorg"
+                            }
+                        }
+                    },
+                    ["core.norg.completion"] = {
+                        config = {
+                            engine = "nvim-cmp"
+                        },
+                    },
+                    ["core.keybinds"] = { -- Configure core.keybinds
+                        config = {
+                            default_keybinds = true, -- Generate the default keybinds
+                            neorg_leader = "<Leader>o" -- This is the default if unspecified
+                        }
+                    },
+                    ["core.integrations.telescope"] = {}, -- Enable the telescope module
+                },
+            }
+        end,
+        requires = {
+                "nvim-lua/plenary.nvim",
+                "nvim-neorg/neorg-telescope",
+        }
+    }
+
+    use {
+        "petertriho/nvim-scrollbar",
+        config = function()
+            require("scrollbar").setup()
         end
     }
 

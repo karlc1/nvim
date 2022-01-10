@@ -26,6 +26,14 @@ vim.wo.number = true
 vim.cmd('set noswapfile')
 vim.cmd('set cmdheight=1')
 
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+    severity_sort = false,
+})
+
+
 -- Set space as leader
 vim.g.mapleader = ' '
 

@@ -24,7 +24,9 @@ vim.api.nvim_set_keymap('n', '<ESC>', ':noh<ESC> :SearchBoxClear<CR>', {noremap 
 
 
 -- Use find-cmdline plugin for ex commands
-vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
+-- vim.api.nvim_set_keymap('n', ';', '<cmd>FineCmdline<CR>', {noremap = false})
+
+-- vim.api.nvim_set_keymap('n', '?', ':Telescope current_buffer_fuzzy_find<cr>', {noremap = false})
 
 -- use searchbox plugin for incsearch
 vim.api.nvim_set_keymap(
