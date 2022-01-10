@@ -16,10 +16,15 @@ local colors = {
     red = '#e86671'
 }
 
-local lsp = require 'feline.providers.lsp'
+local lsp_get_diag_int = function(severity_level)
+  local d = vim.diagnostic.get(0, { severity = severity_level})
+  local count = 0
+  for _ in pairs(d) do count = count + 1 end
+  return count
+end
 
-local lsp_get_diag = function(str)
-  local count = vim.lsp.diagnostic.get_count(0, str)
+local lsp_get_diag_str = function(severity_level)
+  local count = lsp_get_diag_int(severity_level)
   return (count > 0) and ' '..count..' ' or ''
 end
 
@@ -58,45 +63,45 @@ local comps = {
     },
     diagnos = {
         err = {
-            -- provider = 'diagnostic_errors',
             provider = function()
-                return '' .. lsp_get_diag("Error")
+                return '' .. lsp_get_diag_str(vim.diagnostic.severity.ERROR)
             end,
-            -- left_sep = ' ',
-            enabled = function() return lsp.diagnostics_exist('Error') end,
+            enabled = function()
+                return lsp_get_diag_int(vim.diagnostic.severity.ERROR) > 0
+            end,
             hl = {
                 fg = colors.red
             }
         },
         warn = {
-            -- provider = 'diagnostic_warnings',
             provider = function()
-                return '' ..  lsp_get_diag("Warning")
+                return '' ..  lsp_get_diag_str(vim.diagnostic.severity.WARN)
             end,
-            -- left_sep = ' ',
-            enabled = function() return lsp.diagnostics_exist('Warning') end,
+            enabled = function()
+                return lsp_get_diag_int(vim.diagnostic.severity.WARN) > 0
+            end,
             hl = {
                 fg = colors.yellow
             }
         },
         info = {
-            -- provider = 'diagnostic_info',
             provider = function()
-                return '' .. lsp_get_diag("Information")
+                return '' .. lsp_get_diag_str(vim.diagnostic.severity.INFO)
             end,
-            -- left_sep = ' ',
-            enabled = function() return lsp.diagnostics_exist('Information') end,
+            enabled = function()
+                return lsp_get_diag_int(vim.diagnostic.severity.INFO) > 0
+            end,
             hl = {
                 fg = colors.blue
             }
         },
         hint = {
-            -- provider = 'diagnostic_hints',
             provider = function()
-                return '' .. lsp_get_diag("Hint")
+                return '' .. lsp_get_diag_str(vim.diagnostic.severity.HINT)
             end,
-            -- left_sep = ' ',
-            enabled = function() return lsp.diagnostics_exist('Hint') end,
+            enabled = function()
+                return lsp_get_diag_int(vim.diagnostic.severity.HINT) > 0
+            end,
             hl = {
                 fg = colors.cyan
             }
