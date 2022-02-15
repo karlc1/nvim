@@ -162,11 +162,11 @@ return require("packer").startup(
         require "nvim-treesitter.configs".setup {
           ensure_installed = {"go", "norg", "norg_meta", "norg_table"},
           highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false
+            enable = true
+            -- additional_vim_regex_highlighting = {"org"}
           },
           indent = {
-            enable = true
+            enable = false
           }
         }
       end
@@ -300,6 +300,7 @@ return require("packer").startup(
                 {name = "nvim_lsp"},
                 {name = "path"},
                 {name = "neorg"},
+                {name = "orgmode"},
                 -- ?
                 {name = "luasnip"},
                 {name = "cmp-luasnip"},
@@ -568,7 +569,7 @@ return require("packer").startup(
       config = function()
         require("zen-mode").setup {
           window = {
-            backdrop = 1,
+            backdrop = 0.99,
             options = {
               signcolumn = "no",
               number = false,
@@ -587,7 +588,7 @@ return require("packer").startup(
       opt = false,
       config = function()
         require("toggleterm").setup {
-          open_mapping = [[<c-t>]],
+          -- open_mapping = [[<c-t>]],
           shading_factor = 1,
           close_on_exit = true,
           size = vim.o.lines * 0.4
@@ -710,15 +711,14 @@ return require("packer").startup(
             ["core.defaults"] = {}, -- Load all the default modules
             ["core.norg.concealer"] = {
               config = {
-                markup_preset = "brave"
+                markup_preset = "dimmed"
               }
             }, -- Allows for use of icons
             ["core.norg.dirman"] = {
               -- Manage your directories with Neorg
               config = {
                 workspaces = {
-                  my_workspace = "~/neorg",
-                  GTD = "~/norg/GTD"
+                  home = "~/neorg"
                 }
               }
             },
@@ -737,7 +737,12 @@ return require("packer").startup(
             ["core.integrations.telescope"] = {}, -- Enable the telescope module
             ["core.gtd.base"] = {
               config = {
-                workspace = "GTD"
+                workspace = "home"
+              }
+            },
+            ["core.presenter"] = {
+              config = {
+                zen_mode = "zen-mode"
               }
             }
           }
@@ -752,13 +757,36 @@ return require("packer").startup(
     use {
       "petertriho/nvim-scrollbar",
       config = function()
+        vim.cmd [[
+
+        noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+        noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+                    \<Cmd>lua require('hlslens').start()<CR>
+        noremap * *<Cmd>lua require('hlslens').start()<CR>
+        noremap # #<Cmd>lua require('hlslens').start()<CR>
+        noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+        noremap g# g#<Cmd>lua require('hlslens').start()<CR>
+
+        ]]
+
         require("scrollbar").setup(
           {
             show = true,
             handle = {
               text = " ",
-              color = "gray",
-              hide_if_all_visible = true -- Hides handle if all lines are visible
+              -- color = "gray",
+              hide_if_all_visible = true,
+              highlight = "Visual"
+            },
+            marks = {
+              Search = {
+                text = {"-", "="},
+                priority = 0,
+                color = "yellow",
+                cterm = nil,
+                highlight = "IncSearch"
+              }
             },
             handlers = {
               diagnostic = true,
@@ -862,7 +890,8 @@ return require("packer").startup(
           [[
             augroup FormatAutogroup
               autocmd!
-              autocmd BufWritePost *.go,*.lua,*.py FormatWrite
+              " autocmd BufWritePost *.go,*.lua,*.py FormatWrite
+              autocmd BufWritePost *.go,*.lua FormatWrite
             augroup END
             ]],
           true
@@ -891,5 +920,62 @@ return require("packer").startup(
         end
       }
     )
+
+    use {
+      "windwp/nvim-autopairs",
+      config = function()
+        require("nvim-autopairs").setup {}
+      end
+    }
+
+    -- use {
+    --   "ZhiyuanLck/smart-pairs",
+    --   event = "InsertEnter",
+    --   config = function()
+    --     require("pairs"):setup(
+    --       {
+    --         enter = {
+    --           enable_mapping = function()
+    --             -- return require("cmp").visible() == false
+    --             return false
+    --           end,
+    --           enable_cond = function()
+    --             -- return require("cmp").visible() == false
+    --             return false
+    --           end
+    --         },
+    --         space = {
+    --           enable_mapping = false,
+    --           enable_cond = false
+    --         }
+    --       }
+    --     )
+    --   end
+    -- }
+
+    --     use {
+    --       "nvim-orgmode/orgmode",
+    --       config = function()
+    --         vim.opt.conceallevel = 2
+    --         vim.opt.concealcursor = "nc"
+    --
+    --         local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+    --         parser_config.org = {
+    --           install_info = {
+    --             url = "https://github.com/milisims/tree-sitter-org",
+    --             revision = "f110024d539e676f25b72b7c80b0fd43c34264ef",
+    --             files = {"src/parser.c", "src/scanner.cc"}
+    --           },
+    --           filetype = "org"
+    --         }
+    --
+    --         require("orgmode").setup(
+    --           {
+    --             org_agenda_files = {"~/orgmode/*"},
+    --             org_default_notes_file = "~/orgmode/default_notes.org"
+    --           }
+    --         )
+    --       end
+    --     }
   end
 )
