@@ -19,6 +19,10 @@ vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "J", "1<C-e>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "K", "1<C-y>", {noremap = true, silent = true})
 
+-- scroll with wheel and arrows
+vim.api.nvim_set_keymap("n", "<Down>", "1<C-e>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<Up>", "1<C-y>", {noremap = true, silent = true})
+
 -- Disable highlight on <ESC>
 vim.api.nvim_set_keymap("n", "<ESC>", ":noh<ESC> :SearchBoxClear<CR>", {noremap = true, silent = true})
 
@@ -69,6 +73,17 @@ vim.keymap.set(
     end
   end,
   {expr = true}
+)
+
+vim.keymap.set(
+  {"n"},
+  "T",
+  function()
+    local r, c = unpack(vim.api.nvim_win_get_cursor(0))
+    print(r, c)
+    vim.api.nvim_exec([[set pumheight=10]], true)
+  end,
+  {expr = false}
 )
 
 -- Normal leader keymaps

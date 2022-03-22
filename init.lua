@@ -4,8 +4,10 @@ require("plugins")
 require("keymappings")
 require("lsp")
 require("statusline")
+require("snippets")
 -- LSP
 -- require('lsp.go')
+--
 
 vim.cmd("colorscheme embark")
 

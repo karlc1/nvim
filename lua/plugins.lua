@@ -114,6 +114,7 @@ return require("packer").startup(
           options = {
             show_close_icon = false,
             show_buffer_icons = false,
+            buffer_close_icon = "",
             max_name_length = 18,
             always_show_bufferline = false,
             close_icon = "",
@@ -123,7 +124,8 @@ return require("packer").startup(
                 guibg = "#a89984",
                 gui = "bold"
               }
-            }
+            },
+            offsets = {{filetype = "NvimTree", text = "File Explorer", text_align = "center"}}
           }
         }
       end
@@ -569,7 +571,9 @@ return require("packer").startup(
       config = function()
         require("zen-mode").setup {
           window = {
-            backdrop = 0.99,
+            backdrop = 1,
+            width = 0.7,
+            height = 0.7,
             options = {
               signcolumn = "no",
               number = false,
@@ -906,26 +910,42 @@ return require("packer").startup(
       end
     }
 
-    use(
-      {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = function()
-          require("lsp_lines").register_lsp_virtual_lines()
-          -- Disable virtual_text since it's redundant due to lsp_lines.
-          vim.diagnostic.config(
-            {
-              virtual_text = false
-            }
-          )
-        end
-      }
-    )
+    -- use(
+    --   {
+    --     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    --     config = function()
+    --       require("lsp_lines").register_lsp_virtual_lines()
+    --       -- Disable virtual_text since it's redundant due to lsp_lines.
+    --       vim.diagnostic.config(
+    --         {
+    --           virtual_text = false
+    --         }
+    --       )
+    --     end
+    --   }
+    -- )
 
     use {
       "windwp/nvim-autopairs",
       config = function()
         require("nvim-autopairs").setup {}
       end
+    }
+
+    -- using packer.nvim
+    use {
+      "nmac427/guess-indent.nvim",
+      config = function()
+        require("guess-indent").setup {}
+      end
+    }
+
+    use {
+      "mvpopuk/inspired-github.vim"
+    }
+
+    use {
+      "EdenEast/nightfox.nvim"
     }
 
     -- use {
