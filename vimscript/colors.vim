@@ -4,3 +4,4 @@ exec 'hi DebugBreakpoint guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . sy
 exec 'hi DebugStopped guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('WarningMsg'),'fg')
 sign define DapBreakpoint text=⊚ texthl=DebugBreakpoint
 sign define DapStopped text=→ texthl=DebugStopped linehl=Visual
+

@@ -67,10 +67,10 @@ return require("packer").startup(function(use)
                   highlight TelescopeSelection      guibg=bg gui=bold
                   highlight TelescopeNormal         guibg=#00000
                   highlight TelescopeBorder         guifg=#00ff00
-                  highlight TelescopePromptBorder   gui=bold
-                  highlight TelescopeResultsBorder  gui=bold
-                  highlight TelescopePreviewBorder  guifg=#ffffff
-                  highlight TelescopeTitle          guifg=#ffffff
+                  highlight TelescopePromptBorder   guifg=#A0A0A0 gui=bold
+                  highlight TelescopeResultsBorder  guifg=#A0A0A0 gui=bold
+                  highlight TelescopePreviewBorder  guifg=#A0A0A0
+                  " highlight TelescopeTitle          guifg=#ffffff
 
                   highlight link TelescopeResultsStruct structure
                   highlight link TelescopeResultsMethod string
@@ -174,35 +174,42 @@ return require("packer").startup(function(use)
 	})
 
 	-- Navigation
-	-- use({
-	-- 	"karb94/neoscroll.nvim",
-	-- 	opt = false,
-	-- 	config = function()
-	-- 		require("neoscroll").setup({})
-	-- 		local t = {}
-	-- 		-- Syntax: t[keys] = {function, {function arguments}}
-	-- 		t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "200" } }
-	-- 		t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "200" } }
-	-- 		t["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "450" } }
-	-- 		t["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "450" } }
-	-- 		t["<C-y>"] = { "scroll", { "-0.10", "false", "100" } }
-	-- 		t["<C-e>"] = { "scroll", { "0.10", "false", "100" } }
-	-- 		t["zt"] = { "zt", { "150" } }
-	-- 		t["zz"] = { "zz", { "150" } }
-	-- 		t["zb"] = { "zb", { "150" } }
-	-- 		require("neoscroll.config").set_mappings(t)
-	-- 	end,
-	-- })
+	use({
+		"karb94/neoscroll.nvim",
+		opt = false,
+		config = function()
+			require("neoscroll").setup({})
+			local t = {}
+			-- Syntax: t[keys] = {function, {function arguments}}
+			t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "100" } }
+			t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "100" } }
+			t["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "450" } }
+			t["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "450" } }
+			t["<C-y>"] = { "scroll", { "-0.10", "false", "100" } }
+			t["<C-e>"] = { "scroll", { "0.10", "false", "100" } }
+			t["zt"] = { "zt", { "150" } }
+			t["zz"] = { "zz", { "150" } }
+			t["zb"] = { "zb", { "150" } }
+			require("neoscroll.config").set_mappings(t)
+		end,
+	})
 
 	use({
 		"phaazon/hop.nvim",
 		opt = false,
 		config = function()
-			require("hop").setup()
-			require("hop.highlight").insert_highlights()
+			-- require("hop").setup()
+			-- require("hop.highlight").insert_highlights()
 		end,
 	})
 
+	use({
+		"ggandor/leap.nvim",
+		config = function()
+			require("leap").set_default_keymaps()
+		end,
+	})
+	--
 	-- Snippets
 	use({
 		"L3MON4D3/LuaSnip",
@@ -773,7 +780,7 @@ return require("packer").startup(function(use)
         ]])
 
 			require("scrollbar").setup({
-				show = true,
+				show = false,
 				handle = {
 					text = " ",
 					-- color = "gray",

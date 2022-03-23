@@ -59,11 +59,17 @@ vim.api.nvim_exec(
     highlight clear CursorLine
     highlight clear CursorLineNr
 
+    hi Keyword gui=bold
+    hi Function gui=bold
+
+
     " apply changes if colorscheme is changed on the fly
     augroup MyColors
     autocmd!
     autocmd ColorScheme * highlight clear CursorLine
                       \ | highlight clear CursorLineNr
+                      \ | hi Keyword gui=bold
+                      \ | hi Function gui=bold
     augroup END
 
 ]],

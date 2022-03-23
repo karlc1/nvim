@@ -1,7 +1,9 @@
 local wk = require("which-key")
 
 -- Hop to char with 's'
-vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
+
+-- vim.api.nvim_set_keymap("n", "S", ":HopPatternMW<CR>", { noremap = true, silent = true })
 
 -- Cycle and kill buffers
 vim.api.nvim_set_keymap("n", "H", ":BufferLineCyclePrev<CR>", { noremap = true, silent = true })
@@ -16,7 +18,16 @@ vim.api.nvim_set_keymap("n", "<C-j>", "<C-w>j", { noremap = true, silent = true 
 vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true })
 
 -- Search and replace visual selection
+-- vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//gc<left><left><left>', { noremap = true, silent = true })
+
+-- same as above with confirm prompt
+-- vim.api.nvim_set_keymap(
+-- 	"v",
+-- 	"<C-r>",
+-- 	'"hy:%s/<C-r>h//gc|norm``<left><left><left><left><left><left><left><left><left><left>',
+-- 	{ noremap = true, silent = true }
+-- )
 
 -- vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
@@ -33,6 +44,10 @@ vim.api.nvim_set_keymap("n", "<ESC>", ":noh<ESC>", { noremap = true, silent = tr
 
 vim.api.nvim_set_keymap("i", "<C-l>", ":echo 'apa'<CR>", { noremap = false, silent = true })
 
+-- move over wrapped lines
+vim.api.nvim_set_keymap("n", "j", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "k", "gk", { noremap = true, silent = true })
+
 -- Use find-cmdline plugin for ex commands
 -- vim.api.nvim_set_keymap('n', ';', '<cmd>FineCmdline<CR>', {noremap = false})
 
@@ -47,7 +62,9 @@ vim.api.nvim_set_keymap("i", "<C-l>", ":echo 'apa'<CR>", { noremap = false, sile
 -- )
 vim.api.nvim_set_keymap("s", "<C-l>", "<cmd>lua require('luasnip').jump(1)<Cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<C-h>", "<cmd>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("s", "<C-h>", "<cmd>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("s", "<C-h>", "<c<Plug>(leap-cross-window)`md>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "s", "<Plug>(leap-omni)", { noremap = false, silent = false })
 
 vim.keymap.set({ "i", "s" }, "<C-l>", function()
 	if require("luasnip").expand_or_jumpable() then
@@ -77,6 +94,7 @@ end, { expr = false })
 wk.register({
 
 	n = { ":set nu! <CR>", "Toggle numbers" },
+	m = { ":ScrollbarToggle <CR>", "" },
 
 	s = {
 		name = "Search",
