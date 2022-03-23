@@ -16,7 +16,7 @@ vim.api.nvim_set_keymap("n", "<C-j>", "<C-w>j", { noremap = true, silent = true 
 vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true })
 
 -- Search and replace visual selection
-vim.api.nvim_set_keymap("v", "<C-r>", "\"hy:%s/<C-r>h//gc<left><left><left>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//gc<left><left><left>', { noremap = true, silent = true })
 
 -- vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
@@ -75,6 +75,9 @@ end, { expr = false })
 
 -- Normal leader keymaps
 wk.register({
+
+	n = { ":set nu! <CR>", "Toggle numbers" },
+
 	s = {
 		name = "Search",
 		s = {
