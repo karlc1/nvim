@@ -54,6 +54,8 @@ require "lspconfig".gopls.setup {
   capabilities = go_capabilities,
   on_attach = function(client, bufnr)
     require "lsp_signature".on_attach(cfg)
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
   end,
   root_dir = require "lspconfig".util.root_pattern(".git", "go.mod"),
   settings = {gopls = {analyses = {unusedparams = false}, staticcheck = false}},
