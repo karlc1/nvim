@@ -17,7 +17,7 @@ return require("packer").startup(function(use)
 		opt = false,
 	})
 
-		use({
+	use({
 		"ray-x/lsp_signature.nvim",
 		config = function()
 			require("lsp_signature").setup({
@@ -851,7 +851,7 @@ return require("packer").startup(function(use)
 				sources = {
 					require("null-ls").builtins.formatting.stylua,
 					require("null-ls").builtins.diagnostics.eslint,
-					require("null-ls").builtins.completion.spell,
+					-- require("null-ls").builtins.completion.spell,
 					require("null-ls").builtins.formatting.gofmt,
 					require("null-ls").builtins.completion.luasnip,
 				},

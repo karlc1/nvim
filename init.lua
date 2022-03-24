@@ -11,15 +11,22 @@ require("snippets")
 
 vim.cmd("colorscheme embark")
 
-vim.o.splitbelow = true
-vim.o.splitright = true
-vim.bo.expandtab = true
+-- vim.o.splitbelow = true
+-- vim.o.splitright = true
+
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
 -- vim.bo.smartindent = false
 -- vim.o.smartindent = false
 -- vim.bo.autoindent = false
 -- vim.o.autoindent = false
-vim.o.smarttab = true
-vim.wo.signcolumn = "yes"
+--
+-- vim.o.smarttab = true
+-- vim.wo.signcolumn = "yes"
+
+vim.opt.smarttab = true
+vim.opt.signcolumn = "yes"
 
 vim.cmd("set ignorecase")
 vim.cmd("set smartcase")
@@ -103,15 +110,11 @@ vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true, silent = true })
 
 -- Highlight yanked text
-vim.api.nvim_exec(
-	[[
-augroup highlight_yank
-    autocmd!
-    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=150}
-augroup END
-]],
-	false
-)
+local highlight_yank = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+	command = 'silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=150}',
+	group = highlight_yank,
+})
 
 -- Hide tilde characters on empty lines
 vim.api.nvim_exec(":hi NonText guifg=bg", false)
