@@ -60,7 +60,7 @@ vim.api.nvim_exec(
     highlight clear CursorLineNr
 
     hi Keyword gui=bold
-    hi Function gui=bold
+    " hi Function gui=bold
 
 
     " apply changes if colorscheme is changed on the fly
@@ -69,7 +69,7 @@ vim.api.nvim_exec(
     autocmd ColorScheme * highlight clear CursorLine
                       \ | highlight clear CursorLineNr
                       \ | hi Keyword gui=bold
-                      \ | hi Function gui=bold
+                     " \ | hi Function gui=bold
     augroup END
 
 ]],
@@ -96,7 +96,7 @@ vim.cmd('nmap ¤ :silent exec "! setxkbmap us &" <CR>$')
 -- vim.cmd([[autocmd FileType * setlocal shiftwidth=4 softtabstop=4 expandtab]])
 -- vim.cmd([[autocmd FileType go setlocal shiftwidth=8 softtabstop=8 expandtab]])
 vim.cmd([[autocmd Filetype * setlocal tabstop=4 shiftwidth=4 expandtab]])
-vim.cmd([[autocmd Filetype go setlocal tabstop=6 shiftwidth=6 expandtab]])
+vim.cmd([[autocmd Filetype go setlocal tabstop=4 shiftwidth=4 expandtab]])
 
 -- Make indentation repeatable
 vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true, silent = true })
