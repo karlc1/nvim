@@ -16,7 +16,20 @@ return require("packer").startup(function(use)
 		"williamboman/nvim-lsp-installer",
 		opt = false,
 	})
-	use({ "ray-x/lsp_signature.nvim", opt = false })
+
+		use({
+		"ray-x/lsp_signature.nvim",
+		config = function()
+			require("lsp_signature").setup({
+				bind = true, -- This is mandatory, otherwise border config won't get registered.
+				handler_opts = {
+					border = "rounded",
+				},
+				hint_prefix = "H",
+			})
+		end,
+	})
+
 	use({ "ahmedkhalf/lsp-rooter.nvim", opt = false })
 
 	-- Telescope
