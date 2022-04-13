@@ -1,7 +1,22 @@
 -- Language specific init options
 local enhance_server_opts = {
 	["gopls"] = function(opts)
-		opts.root_dir = require("lspconfig").util.root_pattern(".git", "go.mod", ".")
+		local lastrootpath = nil
+
+		local gopath = os.getenv("GOPATH")
+		if gopath == nil then
+			gopath = ""
+		end
+		local gopathmod = gopath .. "/pkg/mod"
+
+		opts.root_dir = function(fname)
+			local fullpath = vim.fn.expand(fname, ":p")
+			if string.find(fullpath, gopathmod) and lastrootpath ~= nil then
+				return lastrootpath
+			end
+			lastrootpath = require("lspconfig").util.root_pattern("go.mod", ".git")(fname)
+			return lastrootpath
+		end
 		opts.settings = { gopls = { analyses = { unusedparams = false }, staticcheck = false } }
 		opts.init_options = { usePlaceholders = true, completeUnimported = true }
 	end,
@@ -60,24 +75,30 @@ local enhance_server_opts = {
 		}
 	end,
 
-	["pyright"] = function (opts)
-				opts.python = {
+	["pyright"] = function(opts)
+		opts.python = {
 			analysis = {
 				autoSearchPaths = true,
 				diagnosticMode = "workspace",
 				useLibraryCodeForTypes = true,
 			},
 		}
-
-		
-	end
+	end,
 }
 
--- Make hover doc popup look prettier
+-- Make hover doc popup look nicer
 local pop_opts = { border = "rounded", max_width = 80 }
 local handlers = vim.lsp.handlers
 handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, pop_opts)
 handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, pop_opts)
+
+-- Make diagnostics signs nicer
+-- local signs = { Error = "", Warn = "", Hint = "", Info = "" }
+local signs = { Error = "", Warn = "", Hint = "", Info = "" }
+for type, icon in pairs(signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
 
 -- Global LSP capabilities
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())

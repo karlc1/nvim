@@ -62,7 +62,12 @@ vim.api.nvim_set_keymap("n", "k", "gk", { noremap = true, silent = true })
 -- )
 vim.api.nvim_set_keymap("s", "<C-l>", "<cmd>lua require('luasnip').jump(1)<Cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<C-h>", "<cmd>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("s", "<C-h>", "<c<Plug>(leap-cross-window)`md>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap(
+	"s",
+	"<C-h>",
+	"<c<Plug>(leap-cross-window)`md>lua require('luasnip').jump(-1)<Cr>",
+	{ noremap = true, silent = true }
+)
 
 vim.api.nvim_set_keymap("n", "s", "<Plug>(leap-omni)", { noremap = false, silent = false })
 
@@ -142,7 +147,7 @@ wk.register({
 		"Find files including hidden",
 	},
 	W = { ":VimwikiIndex<CR>", "Open VimWIki" },
-	e = { ":NvimTreeFindFile<CR>", "Open Tree View" },
+	e = { ":Neotree<CR>", "Open Tree View" },
 	c = { ":CommentToggle<CR>", "Toggle comment" },
 	w = { ":w <cr>", "Write file" },
 	z = {
