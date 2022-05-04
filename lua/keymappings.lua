@@ -312,4 +312,10 @@ wk.register({
 		end,
 		"Incoming calls",
 	},
+	R = {
+		function()
+			vim.lsp.buf.rename()
+		end,
+		"Rename"
+	}
 }, { prefix = "g", mode = "n" })

@@ -1070,7 +1070,7 @@ return require("packer").startup(function(use)
 				close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
 				popup_border_style = "rounded",
 				enable_git_status = true,
-				enable_diagnostics = true,
+				enable_diagnostics = false,
 				default_component_configs = {
 					indent = {
 						indent_size = 2,
@@ -1093,7 +1093,7 @@ return require("packer").startup(function(use)
 						default = "*",
 					},
 					modified = {
-						symbol = "[+]",
+						-- symbol = "[+]",
 						highlight = "NeoTreeModified",
 					},
 					name = {
@@ -1103,15 +1103,15 @@ return require("packer").startup(function(use)
 					git_status = {
 						symbols = {
 							-- Change type
-							added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
-							modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
-							deleted = "✖", -- this can only be used in the git_status source
-							renamed = "", -- this can only be used in the git_status source
+							-- added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
+							-- modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
+							deleted = "", -- this can only be used in the git_status source
+							renamed = "", -- this can only be used in the git_status source
 							-- Status type
-							untracked = "",
-							ignored = "",
-							unstaged = "",
-							staged = "",
+							untracked = "",
+							ignored = "",
+							unstaged = "",
+							staged = "",
 							conflict = "",
 						},
 					},
