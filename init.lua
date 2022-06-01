@@ -149,3 +149,20 @@ vim.cmd("nnoremap <silent> * :let @/ = '<c-r><c-w>' \\| set hlsearch<cr>")
 
 -- source colors (replace with lua once nvim supports it)
 vim.cmd("source ~/.config/nvim/vimscript/colors.vim")
+
+vim.cmd([[
+fun! CaptureClickLineNr()
+
+  echo 'hallaj'
+
+  echo v:mouse_col
+
+  " echo getchar()
+
+  return "<LeftMouse>"
+
+endfun
+
+nnoremap <expr> <LeftMouse> CaptureClickLineNr()
+
+]])
