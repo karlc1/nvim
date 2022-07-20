@@ -116,8 +116,9 @@ require("nvim-lsp-installer").on_server_ready(function(server)
 	local opts = {
 		on_attach = function(client, bufnr)
 			_ = bufnr
-			client.resolved_capabilities.document_formatting = false
-			client.resolved_capabilities.document_range_formatting = false
+			_ = client
+			-- client.resolved_capabilities.document_formatting = false
+			-- client.resolved_capabilities.document_range_formatting = false
 		end,
 		capabilities = capabilities,
 	}
@@ -322,4 +323,4 @@ function OrgImports(wait_ms)
     end
   end
 
-vim.cmd[[autocmd BufWritePre *.go lua OrgImports(1000)]]
+  vim.cmd[[autocmd BufWritePre *.go lua OrgImports(1000)]]

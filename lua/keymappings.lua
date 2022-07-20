@@ -1,7 +1,21 @@
 local wk = require("which-key")
 
+-- yank with yanky
+vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
+vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
+vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
+vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
+vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
+vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
+vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
+
+vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)", {})
+vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)", {})
+
+
 -- Hop to char with 's'
--- vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
 
 -- vim.api.nvim_set_keymap("n", "S", ":HopPatternMW<CR>", { noremap = true, silent = true })
 
@@ -69,7 +83,7 @@ vim.api.nvim_set_keymap(
 	{ noremap = true, silent = true }
 )
 
-vim.api.nvim_set_keymap("n", "s", "<Plug>(leap-omni)", { noremap = false, silent = false })
+-- vim.api.nvim_set_keymap("n", "s", "<Plug>(leap-omni)", { noremap = false, silent = false })
 
 vim.keymap.set({ "i", "s" }, "<C-l>", function()
 	if require("luasnip").expand_or_jumpable() then
@@ -159,11 +173,31 @@ wk.register({
 	},
 	t = {
 		name = "Test and terminal",
-		t = { ": ToggleTerm<CR>", "Toggle terminal" },
-		n = { ":UltestNearest<CR>", "Test nearest" },
-		f = { ":Ultest<CR>", "Test file" },
-		s = { ":UltestSummary<CR>", "Toggle summary" },
-		o = { ":UltestOutput<CR>", "Show test output" },
+		-- t = { ": ToggleTerm<CR>", "Toggle terminal" },
+		n = {
+			function()
+			require("neotest").run.run()
+			end,
+			"Test nearest",
+		},
+		f = {
+			function()
+			require("neotest").run.run(vim.fn.expand("%"))
+		end,
+			"Test file",
+		},
+		s = {
+			function()
+			require("neotest").summary.toggle()
+		end,
+			"Toggle summary",
+		},
+		o = {
+			function()
+			require("neotest").output.open({ enter = true })
+		end,
+			"Show test output",
+		},
 	},
 	d = {
 		name = "Debug and diagnostics",
@@ -316,6 +350,6 @@ wk.register({
 		function()
 			vim.lsp.buf.rename()
 		end,
-		"Rename"
-	}
+		"Rename",
+	},
 }, { prefix = "g", mode = "n" })

@@ -153,20 +153,20 @@ return require("packer").startup(function(use)
 	})
 
 	-- Tree file explorer
-	use({
-		"kyazdani42/nvim-tree.lua",
-		requires = "kyazdani42/nvim-web-devicons",
-		opt = false,
-		config = function()
-			require("nvim-tree").setup({
-				-- auto_close = true,
-				update_cwd = true,
-				view = {
-					auto_resize = true,
-				},
-			})
-		end,
-	})
+	-- use({
+	-- 	"kyazdani42/nvim-tree.lua",
+	-- 	requires = "kyazdani42/nvim-web-devicons",
+	-- 	opt = false,
+	-- 	config = function()
+	-- 		require("nvim-tree").setup({
+	-- 			-- auto_close = true,
+	-- 			update_cwd = true,
+	-- 			view = {
+	-- 				auto_resize = true,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- })
 
 	-- Note taking
 	use({
@@ -180,16 +180,37 @@ return require("packer").startup(function(use)
 	-- Treesitter
 	use({
 		"nvim-treesitter/nvim-treesitter",
+		requires = {
+			"nvim-treesitter/playground",
+		},
 		run = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "go", "norg", "norg_meta", "norg_table" },
+				ensure_installed = { "go", "norg", "norg_table" },
 				highlight = {
 					enable = true,
 					-- additional_vim_regex_highlighting = {"org"}
 				},
 				indent = {
 					enable = false,
+				},
+				playground = {
+					enable = true,
+					disable = {},
+					updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+					persist_queries = false, -- Whether the query persists across vim sessions
+					keybindings = {
+						toggle_query_editor = "o",
+						toggle_hl_groups = "i",
+						toggle_injected_languages = "t",
+						toggle_anonymous_nodes = "a",
+						toggle_language_display = "I",
+						focus_language = "f",
+						unfocus_language = "F",
+						update = "R",
+						goto_node = "<cr>",
+						show_help = "?",
+					},
 				},
 			})
 		end,
@@ -220,17 +241,20 @@ return require("packer").startup(function(use)
 		"phaazon/hop.nvim",
 		opt = false,
 		config = function()
-			-- require("hop").setup()
-			-- require("hop.highlight").insert_highlights()
+			require("hop").setup({
+				-- require'hop'.setup { keys = 'etovxqpdygfblhckisuran' }
+				require("hop").setup({ keys = "asdfghjkl" }),
+			})
+			require("hop.highlight").insert_highlights()
 		end,
 	})
 
-	use({
-		"ggandor/leap.nvim",
-		config = function()
-			require("leap").set_default_keymaps()
-		end,
-	})
+	-- use({
+	-- 	"ggandor/leap.nvim",
+	-- 	config = function()
+	-- 		require("leap").set_default_keymaps()
+	-- 	end,
+	-- })
 	--
 	-- Snippets
 	use({
@@ -388,26 +412,26 @@ return require("packer").startup(function(use)
 		opt = false,
 	})
 
-	use({
-		"rcarriga/vim-ultest",
-		requires = { "vim-test/vim-test" },
-		run = ":UpdateRemotePlugins",
-		config = function()
-			require("ultest").setup({})
-			vim.api.nvim_exec(
-				[[
-                hi UltestPass ctermfg=Green guifg=#96F291
-                hi UltestFail ctermfg=Red guifg=#F70067
-                hi UltestRunning ctermfg=Yellow guifg=#FFEC63
-                hi UltestBorder ctermfg=Red guifg=#F70067
-                hi UltestSummaryInfo ctermfg=cyan guifg=#00F1F5 gui=bold cterm=bold
-                hi link UltestSummaryFile UltestSummaryInfo
-                hi link UltestSummaryNamespace UltestSummaryInfo
-              ]],
-				false
-			)
-		end,
-	})
+	-- use({
+	-- 	"rcarriga/vim-ultest",
+	-- 	requires = { "vim-test/vim-test" },
+	-- 	run = ":UpdateRemotePlugins",
+	-- 	config = function()
+	-- 		require("ultest").setup({})
+	-- 		vim.api.nvim_exec(
+	-- 			[[
+	--                 hi UltestPass ctermfg=Green guifg=#96F291
+	--                 hi UltestFail ctermfg=Red guifg=#F70067
+	--                 hi UltestRunning ctermfg=Yellow guifg=#FFEC63
+	--                 hi UltestBorder ctermfg=Red guifg=#F70067
+	--                 hi UltestSummaryInfo ctermfg=cyan guifg=#00F1F5 gui=bold cterm=bold
+	--                 hi link UltestSummaryFile UltestSummaryInfo
+	--                 hi link UltestSummaryNamespace UltestSummaryInfo
+	--               ]],
+	-- 			false
+	-- 		)
+	-- 	end,
+	-- })
 
 	-- wildmenu
 	-- use({
@@ -532,19 +556,24 @@ return require("packer").startup(function(use)
 		opt = false,
 		config = function()
 			require("dapui").setup({
-				sidebar = {
-					-- You can change the order of elements in the sidebar
-					elements = {
-						-- Provide as ID strings or tables with "id" and "size" keys
-						{
-							id = "scopes",
-							size = 0.65, -- Can be float or integer > 1
+
+				layouts = {
+					{
+						elements = {
+							"scopes",
 						},
-						{ id = "breakpoints", size = 0.35 },
+						size = 0.65,
+						position = "left",
 					},
-					size = 60,
-					position = "left", -- Can be "left", "right", "top", "bottom"
+					{
+						elements = {
+							"breakpoints",
+						},
+						size = 0.35,
+						position = "left",
+					},
 				},
+
 				windows = { indent = 1 },
 			})
 
@@ -585,7 +614,7 @@ return require("packer").startup(function(use)
 			-- require("mini.cursorword").setup({
 			-- 	delay = 1000,
 			-- })
-			require("mini.jump").setup({})
+			-- require("mini.jump").setup({})
 		end,
 	})
 
@@ -804,18 +833,18 @@ return require("packer").startup(function(use)
 	use({
 		"petertriho/nvim-scrollbar",
 		config = function()
-			vim.cmd([[
-
-        noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
-            \<Cmd>lua require('hlslens').start()<CR>
-        noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
-                    \<Cmd>lua require('hlslens').start()<CR>
-        noremap * *<Cmd>lua require('hlslens').start()<CR>``
-        noremap # #<Cmd>lua require('hlslens').start()<CR>
-        noremap g* g*<Cmd>lua require('hlslens').start()<CR>
-        noremap g# g#<Cmd>lua require('hlslens').start()<CR>
-
-        ]])
+			-- vim.cmd([[
+			--
+			--         noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+			--             \<Cmd>lua require('hlslens').start()<CR>
+			--         noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+			--                     \<Cmd>lua require('hlslens').start()<CR>
+			--         noremap * *<Cmd>lua require('hlslens').start()<CR>``
+			--         noremap # #<Cmd>lua require('hlslens').start()<CR>
+			--         noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+			--         noremap g# g#<Cmd>lua require('hlslens').start()<CR>
+			--
+			--         ]])
 
 			require("scrollbar").setup({
 				show = false,
@@ -836,13 +865,13 @@ return require("packer").startup(function(use)
 				},
 				handlers = {
 					diagnostic = true,
-					search = true, -- Requires hlslens to be loaded
+					search = false, -- Requires hlslens to be loaded
 				},
 			})
 
-			require("scrollbar.handlers.search").setup()
+			-- require("scrollbar.handlers.search").setup()
 		end,
-		requires = "kevinhwang91/nvim-hlslens",
+		-- requires = "kevinhwang91/nvim-hlslens",
 	})
 
 	-- use({
@@ -886,7 +915,7 @@ return require("packer").startup(function(use)
 				[[
             augroup FormatAutogroup
               autocmd!
-              autocmd BufWritePost *.go,*.lua lua vim.lsp.buf.formatting_sync({}, 5000)
+              autocmd BufWritePost * silent lua vim.lsp.buf.format()
             augroup END
             ]],
 				true
@@ -1203,6 +1232,85 @@ return require("packer").startup(function(use)
 			})
 
 			vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
+		end,
+	})
+
+	use({
+		"nvim-treesitter/nvim-treesitter-context",
+		requires = {
+			"nvim-treesitter/nvim-treesitter",
+		},
+
+		config = function()
+			require("treesitter-context").setup({
+				enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+				max_lines = -1, -- How many lines the window should span. Values <= 0 mean no limit.
+				patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+					-- For all filetypes
+					-- Note that setting an entry here replaces all other patterns for this entry.
+					-- By setting the 'default' entry below, you can control which nodes you want to
+					-- appear in the context window.
+					default = {
+						"class",
+						"function",
+						"method",
+						"for", -- These won't appear in the context
+						"while",
+						"if",
+						"switch",
+						"case",
+						"return",
+					},
+					-- Example for a specific filetype.
+					-- If a pattern is missing, *open a PR* so everyone can benefit.
+					--   rust = {
+					--       'impl_item',
+					--   },
+				},
+				exact_patterns = {
+					-- Example for a specific filetype with Lua patterns
+					-- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
+					-- exactly match "impl_item" only)
+					-- rust = true,
+				},
+
+				-- [!] The options below are exposed but shouldn't require your attention,
+				--     you can safely ignore them.
+
+				zindex = 20, -- The Z-index of the context window
+			})
+		end,
+	})
+
+	use({
+		"rcarriga/neotest",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+			"akinsho/neotest-go",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-go"),
+				},
+			})
+		end,
+	})
+
+	use({
+		"gbprod/yanky.nvim",
+		config = function()
+			require("yanky").setup({
+				highlight = {
+					on_put = true,
+					on_yank = true,
+					timer = 150,
+				},
+			})
+
+			require("telescope").load_extension("yank_history")
 		end,
 	})
 end)
