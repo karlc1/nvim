@@ -11,11 +11,11 @@ return require("packer").startup(function(use)
 	use({ "nvim-lua/popup.nvim", opt = true })
 
 	-- LSP
-	use({ "neovim/nvim-lspconfig", opt = false })
-	use({
-		"williamboman/nvim-lsp-installer",
-		opt = false,
-	})
+	-- use({ "neovim/nvim-lspconfig", opt = false })
+	-- use({
+	-- 	"williamboman/nvim-lsp-installer",
+	-- 	opt = false,
+	-- })
 
 	use({
 		"ray-x/lsp_signature.nvim",
@@ -557,24 +557,24 @@ return require("packer").startup(function(use)
 		config = function()
 			require("dapui").setup({
 
-				layouts = {
-					{
-						elements = {
-							"scopes",
-						},
-						size = 0.65,
-						position = "left",
-					},
-					{
-						elements = {
-							"breakpoints",
-						},
-						size = 0.35,
-						position = "left",
-					},
-				},
-
-				windows = { indent = 1 },
+				-- layouts = {
+				-- 	{
+				-- 		elements = {
+				-- 			"scopes",
+				-- 		},
+				-- 		size = 0.65,
+				-- 		position = "left",
+				-- 	},
+				-- 	{
+				-- 		elements = {
+				-- 			"breakpoints",
+				-- 		},
+				-- 		size = 0.35,
+				-- 		position = "left",
+				-- 	},
+				-- },
+				--
+				-- windows = { indent = 1 },
 			})
 
 			vim.cmd(
@@ -1096,7 +1096,7 @@ return require("packer").startup(function(use)
 			-- in the form "LspDiagnosticsSignWarning"
 
 			require("neo-tree").setup({
-				close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+				close_if_last_window = true,
 				popup_border_style = "rounded",
 				enable_git_status = true,
 				enable_diagnostics = false,
@@ -1240,44 +1240,24 @@ return require("packer").startup(function(use)
 		requires = {
 			"nvim-treesitter/nvim-treesitter",
 		},
-
 		config = function()
 			require("treesitter-context").setup({
-				enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-				max_lines = -1, -- How many lines the window should span. Values <= 0 mean no limit.
-				patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
-					-- For all filetypes
-					-- Note that setting an entry here replaces all other patterns for this entry.
-					-- By setting the 'default' entry below, you can control which nodes you want to
-					-- appear in the context window.
+				enable = true,
+				max_lines = -1,
+				patterns = {
 					default = {
 						"class",
 						"function",
 						"method",
-						"for", -- These won't appear in the context
+						"for",
 						"while",
 						"if",
 						"switch",
 						"case",
 						"return",
 					},
-					-- Example for a specific filetype.
-					-- If a pattern is missing, *open a PR* so everyone can benefit.
-					--   rust = {
-					--       'impl_item',
-					--   },
 				},
-				exact_patterns = {
-					-- Example for a specific filetype with Lua patterns
-					-- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
-					-- exactly match "impl_item" only)
-					-- rust = true,
-				},
-
-				-- [!] The options below are exposed but shouldn't require your attention,
-				--     you can safely ignore them.
-
-				zindex = 20, -- The Z-index of the context window
+				zindex = 20,
 			})
 		end,
 	})
@@ -1300,6 +1280,22 @@ return require("packer").startup(function(use)
 	})
 
 	use({
+		"catppuccin/nvim",
+		as = "catppuccin",
+		config = function()
+			vim.g.catppuccin_flavour = "mocha"
+			require("catppuccin").setup({
+				dim_inactive = {
+					enabled = false,
+					shade = "dark",
+					percentage = 0.15,
+				},
+			})
+			vim.cmd("colorscheme catppuccin")
+		end,
+	})
+
+	use({
 		"gbprod/yanky.nvim",
 		config = function()
 			require("yanky").setup({
@@ -1311,6 +1307,49 @@ return require("packer").startup(function(use)
 			})
 
 			require("telescope").load_extension("yank_history")
+		end,
+	})
+
+	-- is set up in lsp.lua
+	use({
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+		"neovim/nvim-lspconfig",
+	})
+
+	use({
+		"luisiacc/gruvbox-baby",
+		config = function()
+			vim.g.gruvbox_baby_background_color = "dark"
+		end,
+	})
+
+	use({
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		config = function()
+			require("lsp_lines").setup()
+		end,
+	})
+
+	use({
+		"Pocco81/true-zen.nvim",
+		config = function()
+			local open_callback = function()
+				vim.cmd([[ScrollbarHide]])
+			end
+			require("true-zen").setup({
+				modes = {
+					narrow = {
+						folds_style = "invisible",
+						run_atarxis = true,
+						open_callback = open_callback,
+					},
+					ataraxis = {
+						quit_untoggles = true,
+						open_callback = open_callback,
+					},
+				},
+			})
 		end,
 	})
 end)

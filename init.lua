@@ -13,7 +13,10 @@ require("snippets")
 -- for testing plugin
 vim.api.nvim_set_keymap("n", "gx", ":lua require('context-refs').find_refs()<CR>", { noremap = false, silent = true })
 
+
 vim.cmd("colorscheme embark")
+-- vim.cmd("colorscheme catppuccin")
+
 -- vim.cmd([[highlight Normal guibg=none]])
 -- vim.cmd([[highlight NonText guibg=none guifg=none]])
 -- vim.cmd([[highlight Normal ctermbg=none]])
@@ -22,7 +25,7 @@ vim.cmd("colorscheme embark")
 -- vim.o.splitbelow = true
 -- vim.o.splitright = true
 
-vim.opt.splitbelow = true
+    vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 -- vim.bo.smartindent = false
@@ -41,7 +44,7 @@ vim.cmd("set smartcase")
 -- vim.wo.number = true
 vim.cmd("set noswapfile")
 
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -165,19 +168,19 @@ vim.cmd("source ~/.config/nvim/vimscript/colors.vim")
 -- "cursor's different colors in insert-mode and normal-mode
 -- set guicursor=n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20,o:hor50
 
-vim.cmd([[
-fun! CaptureClickLineNr()
-
-  echo 'hallaj'
-
-  echo v:mouse_col
-
-  " echo getchar()
-
-  return "<LeftMouse>"
-
-endfun
-
-nnoremap <expr> <LeftMouse> CaptureClickLineNr()
-
-]])
+-- vim.cmd([[
+-- fun! CaptureClickLineNr()
+--
+--   echo 'hallaj'
+--
+--   echo v:mouse_col
+--
+--   " echo getchar()
+--
+--   return "<LeftMouse>"
+--
+-- endfun
+--
+-- nnoremap <expr> <LeftMouse> CaptureClickLineNr()
+--
+-- ]])

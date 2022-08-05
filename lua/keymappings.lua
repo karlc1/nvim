@@ -13,7 +13,6 @@ vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)", {})
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)", {})
 
-
 -- Hop to char with 's'
 vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
 
@@ -164,38 +163,32 @@ wk.register({
 	e = { ":Neotree<CR>", "Open Tree View" },
 	c = { ":CommentToggle<CR>", "Toggle comment" },
 	w = { ":w <cr>", "Write file" },
-	z = {
-		function()
-			require("zen-mode").toggle()
-			vim.cmd("ScrollbarToggle")
-		end,
-		"Zen Mode",
-	},
+	z = { ":TZAtaraxis<CR>", "Zen mode" },
 	t = {
 		name = "Test and terminal",
 		-- t = { ": ToggleTerm<CR>", "Toggle terminal" },
 		n = {
 			function()
-			require("neotest").run.run()
+				require("neotest").run.run()
 			end,
 			"Test nearest",
 		},
 		f = {
 			function()
-			require("neotest").run.run(vim.fn.expand("%"))
-		end,
+				require("neotest").run.run(vim.fn.expand("%"))
+			end,
 			"Test file",
 		},
 		s = {
 			function()
-			require("neotest").summary.toggle()
-		end,
+				require("neotest").summary.toggle()
+			end,
 			"Toggle summary",
 		},
 		o = {
 			function()
-			require("neotest").output.open({ enter = true })
-		end,
+				require("neotest").output.open({ enter = true })
+			end,
 			"Show test output",
 		},
 	},
@@ -287,6 +280,7 @@ wk.register({
 -- Visual leader keymaps
 wk.register({
 	c = { ":CommentToggle<CR>", "Toggle comment" },
+	z = { ":TZNarrow<CR>", "Zen mode" },
 }, { prefix = "<leader>", mode = "v" })
 
 wk.register({
