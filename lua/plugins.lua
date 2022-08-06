@@ -8,7 +8,7 @@ augroup end]])
 return require("packer").startup(function(use)
 	-- Packer
 	use("wbthomason/packer.nvim")
-	use({ "nvim-lua/popup.nvim", opt = true })
+	-- use({ "nvim-lua/popup.nvim", opt = true })
 
 	-- LSP
 	-- use({ "neovim/nvim-lspconfig", opt = false })
@@ -1291,7 +1291,6 @@ return require("packer").startup(function(use)
 					percentage = 0.15,
 				},
 			})
-			vim.cmd("colorscheme catppuccin")
 		end,
 	})
 
@@ -1299,6 +1298,9 @@ return require("packer").startup(function(use)
 		"gbprod/yanky.nvim",
 		config = function()
 			require("yanky").setup({
+				preserve_cursor_position = {
+					enabled = true,
+				},
 				highlight = {
 					on_put = true,
 					on_yank = true,

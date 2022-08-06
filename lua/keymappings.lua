@@ -1,6 +1,7 @@
 local wk = require("which-key")
 
 -- yank with yanky
+vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
 vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
 vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
 vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
