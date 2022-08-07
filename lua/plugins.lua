@@ -488,9 +488,18 @@ return require("packer").startup(function(use)
 				"     ⢸⣿⠶⠶⣿ ⠈⢻⣿⠁ ⣿⡇ ⢸⣿⢸⣿⢶⣾⠏ ⣸⣟⣹⣧          ",
 				"     ⠸⠿  ⠿  ⠸⠿  ⠿⠷⠶⠿⠃⠸⠿⠄⠙⠷⠤⠿⠉⠉⠿⠆         ",
 			}
+
+			-- vim.g.dashboard_preview_file = "~/.config/nvim/splash.cat"
+			-- vim.g.dashboard_preview_file_height = 15
+			-- vim.g.dashboard_preview_file_width = 41
+
+			vim.g.dashboard_preview_file = "~/.config/nvim/splash.cat"
+			vim.g.dashboard_preview_file_height = 15
+			vim.g.dashboard_preview_file_width = 41
+
 			vim.g.dashboard_default_executive = "telescope"
-			-- vim.g.dashboard_preview_command = 'cat'
-			-- vim.g.dashboard_preview_pipeline = 'lolcat'
+			vim.g.dashboard_preview_command = "cat"
+			vim.g.dashboard_preview_pipeline = "lolcat"
 			vim.g.dashboard_custom_footer = { "" }
 			vim.g.dashboard_custom_section = {
 				a = {

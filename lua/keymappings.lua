@@ -1,6 +1,17 @@
 local wk = require("which-key")
 
--- yank with yanky
+-- do not copy text to clipboard when deleting empty line
+vim.keymap.set({ "n" }, "dd", function()
+	if vim.api.nvim_get_current_line():match("^%s*$") then
+		print("EMPTY")
+		return '"_dd'
+	end
+
+	print("NON_EMPTY")
+	return "dd"
+end, { expr = true, noremap = false, silent = true })
+
+-- yank and with yanky
 vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
 vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
 vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
@@ -10,7 +21,6 @@ vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
 vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
 vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
 vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
-
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)", {})
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)", {})
 
@@ -74,8 +84,8 @@ vim.api.nvim_set_keymap("n", "k", "gk", { noremap = true, silent = true })
 --   "<cmd>lua require('luasnip').jump(1)<Cr> | echo 'apa'<cr>",
 --   {noremap = true, silent = true}
 -- )
-vim.api.nvim_set_keymap("s", "<C-l>", "<cmd>lua require('luasnip').jump(1)<Cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<C-h>", "<cmd>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("s", "<C-l>", "<cmd>lua require('luasnip').jump(1)<Cr>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("i", "<C-h>", "<cmd>lua require('luasnip').jump(-1)<Cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
 	"s",
 	"<C-h>",
@@ -85,7 +95,7 @@ vim.api.nvim_set_keymap(
 
 vim.keymap.set({ "i", "s" }, "<C-l>", function()
 	-- if there is a expandable node, just expand it directly
-	if require("luasnip").expandable() and not require("luasnip").jumpable(1) then
+	if require("luasnip").expandable() then
 		return "<Plug>luasnip-expand-or-jump"
 	end
 

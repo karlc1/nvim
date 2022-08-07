@@ -130,6 +130,7 @@ vim.api.nvim_exec(":hi NonText guifg=bg", false)
 -- Yank to system clipboard
 vim.cmd("set clipboard=unnamedplus")
 
+
 -- No not copy text when deleting with 'x' or 'c'
 vim.api.nvim_set_keymap("n", "x", '"_x', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "x", '"_x', { noremap = true, silent = true })
