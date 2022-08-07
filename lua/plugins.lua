@@ -259,14 +259,12 @@ return require("packer").startup(function(use)
 	-- Snippets
 	use({
 		"L3MON4D3/LuaSnip",
-		config = function()
-			-- local luasnip = require('luasnip')
-			-- luasnip.config.set_config({
-			--     history = false,
-			-- })
-
-			require("luasnip/loaders/from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets" } })
-		end,
+		-- config = function()
+		-- 	local luasnip = require("luasnip")
+		-- 	luasnip.config.set_config({
+		-- 		history = true,
+		-- 	})
+		-- end,
 	})
 
 	-- use("rafamadriz/friendly-snippets")
@@ -344,21 +342,15 @@ return require("packer").startup(function(use)
 						end
 					end,
 				},
-				-- sources = {
-				-- { name = 'nvim_lsp' },
-				-- { name = 'buffer' },
-				-- }
+
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "path" },
 					{ name = "neorg" },
 					{ name = "orgmode" },
-					-- ?
 					{ name = "luasnip" },
-					{ name = "cmp-luasnip" },
+					-- { name = "cmp-luasnip" },
 					{ name = "cmp-nvim-lua" },
-					-- { name = 'emoji' },
-					-- { name = 'vsnip' },
 				}, {
 					{ name = "buffer" },
 				}),
@@ -907,7 +899,7 @@ return require("packer").startup(function(use)
 					require("null-ls").builtins.diagnostics.eslint,
 					-- require("null-ls").builtins.completion.spell,
 					require("null-ls").builtins.formatting.gofmt,
-					require("null-ls").builtins.completion.luasnip,
+					-- require("null-ls").builtins.completion.luasnip,
 				},
 			})
 

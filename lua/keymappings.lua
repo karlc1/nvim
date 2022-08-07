@@ -83,21 +83,25 @@ vim.api.nvim_set_keymap(
 	{ noremap = true, silent = true }
 )
 
--- vim.api.nvim_set_keymap("n", "s", "<Plug>(leap-omni)", { noremap = false, silent = false })
-
 vim.keymap.set({ "i", "s" }, "<C-l>", function()
-	if require("luasnip").expand_or_jumpable() then
-		require("luasnip").jump(1)
-		return ""
-	else
+	-- if there is a expandable node, just expand it directly
+	if require("luasnip").expandable() and not require("luasnip").jumpable(1) then
+		return "<Plug>luasnip-expand-or-jump"
+	end
+
+	-- if theres a jumpable node ahead, jump to it
+	if require("luasnip").jumpable(1) then
+		return "<Plug>luasnip-jump-next"
+	else -- if nothing else, just move the cursor
 		return "<Right>"
 	end
 end, { expr = true })
 
 vim.keymap.set({ "i", "s" }, "<C-h>", function()
-	if require("luasnip").expand_or_jumpable() then
-		require("luasnip").jump(-1)
-		return ""
+	if require("luasnip").jumpable(-1) then
+		-- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "m", true)
+		-- require("luasnip").jump(-1)
+		return "<Plug>luasnip-jump-prev"
 	else
 		return "<Left>"
 	end

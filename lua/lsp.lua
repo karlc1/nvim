@@ -22,17 +22,29 @@ mason_lspconfig.setup({
 	},
 })
 
+local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+	properties = {
+		"documentation",
+		"detail",
+		"additionalTextEdits",
+	},
+}
+
 mason_lspconfig.setup_handlers({
 	-- The first entry (without a key) will be the default handler
 	-- and will be called for each installed server that doesn't have
 	-- a dedicated handler.
 	function(server_name)
-		require("lspconfig")[server_name].setup({})
+		require("lspconfig")[server_name].setup({
+			capabilities = capabilities,
+		})
 	end,
 
 	-- Next, you can provide targeted overrides for specific servers.
 	["sumneko_lua"] = function()
 		lspconfig.sumneko_lua.setup({
+			capabilities = capabilities,
 			settings = {
 				Lua = {
 					runtime = {
@@ -56,6 +68,7 @@ mason_lspconfig.setup_handlers({
 
 	["yamlls"] = function()
 		lspconfig.yamlls.setup({
+			capabilities = capabilities,
 			settings = {
 				yaml = {
 					hover = true,
@@ -86,8 +99,8 @@ mason_lspconfig.setup_handlers({
 	end,
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 util.default_config = vim.tbl_extend("force", util.default_config, {
 	autostart = false,
 	capabilities = capabilities,

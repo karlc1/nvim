@@ -30,8 +30,6 @@ local lsp_get_diag_str = function(severity_level)
 	return (count > 0) and " " .. count .. " " or ""
 end
 
-
-
 -- LuaFormatter off
 
 local comps = {
