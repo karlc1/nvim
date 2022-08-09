@@ -50,6 +50,9 @@ vim.diagnostic.config({
 	severity_sort = false,
 })
 
+-- disable mouse since some plugin tries to enable it
+vim.cmd[[set mouse=]]
+
 -- Set space as leader
 vim.g.mapleader = " "
 

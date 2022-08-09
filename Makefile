@@ -3,7 +3,7 @@ packer = ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 .PHONY: plugins
 plugins: $(packer)
 	@echo "----- Installing/updating plugins"
-	@nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+	@nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' 2> /dev/null
 
 $(packer):
 	@echo "----- Adding packer.nvim to location $(packer)"

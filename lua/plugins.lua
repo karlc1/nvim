@@ -16,6 +16,7 @@ return require("packer").startup(function(use)
 	-- 	"williamboman/nvim-lsp-installer",
 	-- 	opt = false,
 	-- })
+	--
 
 	use({
 		"ray-x/lsp_signature.nvim",
@@ -89,7 +90,7 @@ return require("packer").startup(function(use)
 
                   highlight link TelescopeResultsStruct structure
                   highlight link TelescopeResultsMethod string
-                  highlight link TelescopePromptTitle string
+                  highlight link TelescopePromptTitle constant
                   ]],
 				true
 			)
@@ -493,13 +494,13 @@ return require("packer").startup(function(use)
 			-- vim.g.dashboard_preview_file_height = 15
 			-- vim.g.dashboard_preview_file_width = 41
 
-			vim.g.dashboard_preview_file = "~/.config/nvim/splash.cat"
-			vim.g.dashboard_preview_file_height = 15
-			vim.g.dashboard_preview_file_width = 41
+			-- vim.g.dashboard_preview_file = "~/.config/nvim/splash.cat"
+			-- vim.g.dashboard_preview_file_height = 15
+			-- vim.g.dashboard_preview_file_width = 41
+			-- vim.g.dashboard_preview_command = "cat"
+			-- vim.g.dashboard_preview_pipeline = "lolcat"
 
 			vim.g.dashboard_default_executive = "telescope"
-			vim.g.dashboard_preview_command = "cat"
-			vim.g.dashboard_preview_pipeline = "lolcat"
 			vim.g.dashboard_custom_footer = { "" }
 			vim.g.dashboard_custom_section = {
 				a = {
@@ -591,10 +592,9 @@ return require("packer").startup(function(use)
 
 	use({
 		"theHamsta/nvim-dap-virtual-text",
-		opt = false,
-		-- config = function()
-		--     vim.g.dap_virtual_text = true
-		-- end
+		config = function()
+			require("nvim-dap-virtual-text").setup()
+		end,
 	})
 
 	-- stabilize window

@@ -289,6 +289,12 @@ wk.register({
 			end,
 			"List all buffers diagnostics",
 		},
+		d = {
+			function()
+				require("lsp_lines").toggle()
+			end,
+			"Toggle inline error messages",
+		},
 	},
 }, { prefix = "<leader>" })
 
