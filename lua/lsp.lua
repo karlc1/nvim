@@ -90,6 +90,7 @@ mason_lspconfig.setup_handlers({
 						"!GetAZs",
 						"!ImportValue",
 						"!Select",
+						"!Select sequence",
 						"!Split",
 						"!Join sequence",
 					},
