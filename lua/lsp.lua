@@ -67,36 +67,80 @@ mason_lspconfig.setup_handlers({
 	end,
 
 	["yamlls"] = function()
-		lspconfig.yamlls.setup({
-			capabilities = capabilities,
-			settings = {
-				yaml = {
-					hover = true,
-					completion = true,
-					customTags = {
-						"!fn",
-						"!And",
-						"!If",
-						"!Not",
-						"!Equals",
-						"!Or",
-						"!FindInMap sequence",
-						"!Base64",
-						"!Cidr",
-						"!Ref",
-						"!Ref Scalar",
-						"!Sub",
-						"!GetAtt",
-						"!GetAZs",
-						"!ImportValue",
-						"!Select",
-						"!Select sequence",
-						"!Split",
-						"!Join sequence",
+		local cfg = require("yaml-companion").setup({
+			schemas = {
+				result = {
+					{
+						name = "OpenApi 3.0.X",
+						uri = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json",
+					},
+				},
+			},
+			lspconfig = {
+				settings = {
+					yaml = {
+						hover = true,
+						completion = true,
+						redhat = { telemetry = { enabled = false } },
+						validate = true,
+						format = { enable = true },
+						customTags = {
+							"!fn",
+							"!And",
+							"!If",
+							"!Not",
+							"!Equals",
+							"!Or",
+							"!FindInMap sequence",
+							"!Base64",
+							"!Cidr",
+							"!Ref",
+							"!Ref Scalar",
+							"!Sub",
+							"!GetAtt",
+							"!GetAZs",
+							"!ImportValue",
+							"!Select",
+							"!Select sequence",
+							"!Split",
+							"!Join sequence",
+						},
 					},
 				},
 			},
 		})
+		lspconfig.yamlls.setup(cfg)
+
+		-- lspconfig.yamlls.setup({
+		-- 	capabilities = capabilities,
+		-- 	settings = {
+		-- 		yaml = {
+		-- 			hover = true,
+		-- 			completion = true,
+		-- 			customTags = {
+		-- 				"!fn",
+		-- 				"!And",
+		-- 				"!If",
+		-- 				"!Not",
+		-- 				"!Equals",
+		-- 				"!Or",
+		-- 				"!FindInMap sequence",
+		-- 				"!Base64",
+		-- 				"!Cidr",
+		-- 				"!Ref",
+		-- 				"!Ref Scalar",
+		-- 				"!Sub",
+		-- 				"!GetAtt",
+		-- 				"!GetAZs",
+		-- 				"!ImportValue",
+		-- 				"!Select",
+		-- 				"!Select sequence",
+		-- 				"!Split",
+		-- 				"!Join sequence",
+		-- 			},
+		-- 		},
+		-- 	},
+		-- })
 	end,
 })
 

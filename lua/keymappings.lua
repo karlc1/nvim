@@ -128,6 +128,7 @@ wk.register({
 
 	n = { ":set nu! <CR>", "Toggle numbers" },
 	m = { ":ScrollbarToggle <CR>", "" },
+	b = { ":IndentBlanklineToggle <CR>", "" },
 
 	s = {
 		name = "Search",

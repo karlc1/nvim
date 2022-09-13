@@ -144,8 +144,8 @@ return require("packer").startup(function(use)
 						{ filetype = "NvimTree", text = "File Explorer", text_align = "center" },
 						{
 							filetype = "neo-tree",
-							text = "──────────── Files ────────────",
-							text_align = "center",
+							-- text = "──────────── Files ────────────",
+							-- text_align = "center",
 						},
 					},
 				},
@@ -349,9 +349,10 @@ return require("packer").startup(function(use)
 					{ name = "path" },
 					{ name = "neorg" },
 					{ name = "orgmode" },
-					{ name = "luasnip" },
 					-- { name = "cmp-luasnip" },
 					{ name = "cmp-nvim-lua" },
+				}, {
+					{ name = "luasnip" },
 				}, {
 					{ name = "buffer" },
 				}),
@@ -1057,11 +1058,12 @@ return require("packer").startup(function(use)
 			-- vim.opt.listchars:append("space:⋅")
 			vim.cmd([[hi IndentBlanklineChar guifg=#39383f]])
 			vim.cmd([[hi IndentBlanklineContextChar guifg=#53525c]])
+
 			require("indent_blankline").setup({
 				space_char_blankline = " ",
 				show_current_context = true,
 				enabled = false,
-				-- show_current_context_start = true,
+				show_current_context_start = true,
 			})
 		end,
 	})
@@ -1331,6 +1333,7 @@ return require("packer").startup(function(use)
 		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 		config = function()
 			require("lsp_lines").setup()
+			require("lsp_lines").toggle()
 		end,
 	})
 
@@ -1353,6 +1356,23 @@ return require("packer").startup(function(use)
 					},
 				},
 			})
+		end,
+	})
+
+	use({
+		"sindrets/diffview.nvim",
+		requires = "nvim-lua/plenary.nvim",
+	})
+
+	use({
+		"someone-stole-my-name/yaml-companion.nvim",
+		requires = {
+			{ "neovim/nvim-lspconfig" },
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		config = function()
+			require("telescope").load_extension("yaml_schema")
 		end,
 	})
 end)
