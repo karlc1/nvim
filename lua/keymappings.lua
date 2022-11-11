@@ -3,11 +3,9 @@ local wk = require("which-key")
 -- do not copy text to clipboard when deleting empty line
 vim.keymap.set({ "n" }, "dd", function()
 	if vim.api.nvim_get_current_line():match("^%s*$") then
-		print("EMPTY")
 		return '"_dd'
 	end
 
-	print("NON_EMPTY")
 	return "dd"
 end, { expr = true, noremap = false, silent = true })
 
@@ -25,7 +23,10 @@ vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)", {})
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)", {})
 
 -- Hop to char with 's'
-vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "s", ":HopChar1<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "s", ":Pounce<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "S", ":PounceRepeat<CR>", { noremap = true, silent = true })
+
 
 -- vim.api.nvim_set_keymap("n", "S", ":HopPatternMW<CR>", { noremap = true, silent = true })
 
@@ -43,7 +44,8 @@ vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true 
 
 -- Search and replace visual selection
 -- vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//gc<left><left><left>', { noremap = true, silent = true })
+-- original: vim.api.nvim_set_keymap("v", "<C-r>", '"hy:%s/<C-r>h//gc<left><left><left>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<C-r>", '"hy:.,$s/<C-r>h//gc<left><left><left>', { noremap = true, silent = true })
 
 -- same as above with confirm prompt
 -- vim.api.nvim_set_keymap(

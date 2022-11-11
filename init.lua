@@ -40,8 +40,9 @@ vim.cmd("set ignorecase")
 vim.cmd("set smartcase")
 -- vim.wo.number = true
 vim.cmd("set noswapfile")
+vim.cmd("set number")
 
-vim.opt.cmdheight = 1
+vim.opt.cmdheight = 0
 
 vim.diagnostic.config({
 	virtual_text = false,
@@ -51,7 +52,7 @@ vim.diagnostic.config({
 })
 
 -- disable mouse since some plugin tries to enable it
-vim.cmd[[set mouse=]]
+vim.cmd([[set mouse=]])
 
 -- Set space as leader
 vim.g.mapleader = " "
@@ -132,7 +133,6 @@ vim.api.nvim_exec(":hi NonText guifg=bg", false)
 
 -- Yank to system clipboard
 vim.cmd("set clipboard=unnamedplus")
-
 
 -- No not copy text when deleting with 'x' or 'c'
 vim.api.nvim_set_keymap("n", "x", '"_x', { noremap = true, silent = true })

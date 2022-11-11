@@ -17,6 +17,70 @@ return require("packer").startup(function(use)
 	-- 	opt = false,
 	-- })
 	--
+	--
+	--
+
+	-- use({
+	-- 	"folke/noice.nvim",
+	-- 	requires = {
+	-- 		-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+	-- 		"MunifTanjim/nui.nvim",
+	-- 		"rcarriga/nvim-notify",
+	-- 	},
+	-- 	event = "VimEnter",
+	-- 	config = function()
+	-- 		require("noice").setup({
+	-- 			routes = {
+	-- 				{
+	-- 					filter = {
+	-- 						event = "msg_show",
+	-- 						kind = "",
+	-- 						find = "written",
+	-- 					},
+	-- 					opts = { skip = true },
+	-- 				},
+	-- 				{
+	-- 					filter = {
+	-- 						event = "msg_show",
+	-- 						kind = "",
+	-- 						find = "[LSP] Format request failed",
+	-- 					},
+	-- 					opts = { skip = true },
+	-- 				},
+	-- 			},
+	-- 			views = {
+	-- 				cmdline_popup = {
+	-- 					position = {
+	-- 						row = 11,
+	-- 						col = "50%",
+	-- 					},
+	-- 					size = {
+	-- 						width = 60,
+	-- 						height = "auto",
+	-- 					},
+	-- 				},
+	-- 				popupmenu = {
+	-- 					relative = "editor",
+	-- 					position = {
+	-- 						row = 14,
+	-- 						col = "50%",
+	-- 					},
+	-- 					size = {
+	-- 						width = 60,
+	-- 						height = 10,
+	-- 					},
+	-- 					border = {
+	-- 						style = "rounded",
+	-- 						padding = { 0, 1 },
+	-- 					},
+	-- 					win_options = {
+	-- 						winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- })
 
 	use({
 		"ray-x/lsp_signature.nvim",
@@ -75,6 +139,16 @@ return require("packer").startup(function(use)
 						},
 						symbol_width = 45,
 						symbol_type_width = 100,
+					},
+					lsp_references = {
+						theme = "ivy",
+						-- previewer = true,
+						layout_config = {
+							height = 0.9,
+							width = 0.9,
+							preview_width = 0.7,
+						},
+						fname_width = 500,
 					},
 				},
 			})
@@ -170,13 +244,13 @@ return require("packer").startup(function(use)
 	-- })
 
 	-- Note taking
-	use({
-		"vimwiki/vimwiki",
-		opt = false,
-		config = function()
-			-- vim.cmd[[let g:vimwiki_key_mappings = { 'all_maps': 0, }]]
-		end,
-	})
+	-- use({
+	-- 	"vimwiki/vimwiki",
+	-- 	opt = false,
+	-- 	config = function()
+	-- 		-- vim.cmd[[let g:vimwiki_key_mappings = { 'all_maps': 0, }]]
+	-- 	end,
+	-- })
 
 	-- Treesitter
 	use({
@@ -1373,6 +1447,18 @@ return require("packer").startup(function(use)
 		},
 		config = function()
 			require("telescope").load_extension("yaml_schema")
+		end,
+	})
+
+	use({
+		"https://github.com/rlane/pounce.nvim.git",
+		config = function()
+			require("pounce").setup({
+				accept_keys = "JFKDLSAHGNUVRBYTMICEOXWPQZ",
+				accept_best_key = "<enter>",
+				multi_window = true,
+				debug = false,
+			})
 		end,
 	})
 end)
