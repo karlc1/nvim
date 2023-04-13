@@ -6,8 +6,17 @@ vim.cmd([[augroup packer_user_config
 augroup end]])
 
 return require("packer").startup(function(use)
+
+
 	-- Packer
 	use("wbthomason/packer.nvim")
+
+	use({
+		"folke/neodev.nvim",
+		config = function()
+			require("neodev").setup({})
+		end
+	})
 	-- use({ "nvim-lua/popup.nvim", opt = true })
 
 	-- LSP
@@ -111,6 +120,9 @@ return require("packer").startup(function(use)
 					layout_config = {
 						preview_cutoff = 10,
 						prompt_position = "top",
+					},
+					file_ignore_patterns = {
+						"vendor/.*",
 					},
 				},
 				pickers = {
@@ -216,11 +228,9 @@ return require("packer").startup(function(use)
 					},
 					offsets = {
 						{ filetype = "NvimTree", text = "File Explorer", text_align = "center" },
-						{
-							filetype = "neo-tree",
-							-- text = "──────────── Files ────────────",
-							-- text_align = "center",
-						},
+						{ filetype = "neo-tree" },
+						{ filetype = "dapui_scopes" },
+						{ filetype = "dapui_breakpoints" },
 					},
 				},
 			})
@@ -299,8 +309,8 @@ return require("packer").startup(function(use)
 			require("neoscroll").setup({})
 			local t = {}
 			-- Syntax: t[keys] = {function, {function arguments}}
-			t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "100" } }
-			t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "100" } }
+			t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "130" } }
+			t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "130" } }
 			t["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "450" } }
 			t["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "450" } }
 			t["<C-y>"] = { "scroll", { "-0.10", "false", "100" } }
@@ -421,14 +431,21 @@ return require("packer").startup(function(use)
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "path" },
-					{ name = "neorg" },
+					-- { name = "neorg" },
 					{ name = "orgmode" },
 					-- { name = "cmp-luasnip" },
 					{ name = "cmp-nvim-lua" },
 				}, {
 					{ name = "luasnip" },
 				}, {
-					{ name = "buffer" },
+					{
+						name = 'buffer',
+						option = {
+							get_bufnrs = function()
+								return vim.api.nvim_list_bufs()
+							end
+						}
+					},
 				}),
 				experimental = {
 					ghost_text = true,
@@ -565,6 +582,15 @@ return require("packer").startup(function(use)
 				"     ⠸⠿  ⠿  ⠸⠿  ⠿⠷⠶⠿⠃⠸⠿⠄⠙⠷⠤⠿⠉⠉⠿⠆         ",
 			}
 
+			vim.g.dashboard_custom_header = {
+				"███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+				"████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
+				"██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
+				"██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+				"██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
+				"╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
+			}
+
 			-- vim.g.dashboard_preview_file = "~/.config/nvim/splash.cat"
 			-- vim.g.dashboard_preview_file_height = 15
 			-- vim.g.dashboard_preview_file_width = 41
@@ -672,14 +698,6 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	-- stabilize window
-	use({
-		"luukvbaal/stabilize.nvim",
-		config = function()
-			require("stabilize").setup()
-		end,
-	})
-
 	-- mini plugins
 	--
 	use({
@@ -691,6 +709,7 @@ return require("packer").startup(function(use)
 			-- 	delay = 1000,
 			-- })
 			-- require("mini.jump").setup({})
+			-- require('mini.animate').setup()
 		end,
 	})
 
@@ -824,87 +843,87 @@ return require("packer").startup(function(use)
 	-- 	end,
 	-- })
 
-	use({
-		"nvim-neorg/neorg",
-		-- tag = "latest",
-		config = function()
-			vim.opt.conceallevel = 2
-			vim.opt.concealcursor = "n"
-
-			local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
-
-			parser_configs.norg = {
-				install_info = {
-					url = "https://github.com/nvim-neorg/tree-sitter-norg",
-					files = { "src/parser.c", "src/scanner.cc" },
-					branch = "main",
-				},
-			}
-
-			parser_configs.norg_meta = {
-				install_info = {
-					url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
-					files = { "src/parser.c" },
-					branch = "main",
-				},
-			}
-
-			parser_configs.norg_table = {
-				install_info = {
-					url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
-					files = { "src/parser.c" },
-					branch = "main",
-				},
-			}
-
-			require("neorg").setup({
-				-- Tell Neorg what modules to load
-				load = {
-					["core.defaults"] = {}, -- Load all the default modules
-					["core.norg.concealer"] = {
-						config = {
-							markup_preset = "brave",
-						},
-					}, -- Allows for use of icons
-					["core.norg.dirman"] = {
-						-- Manage your directories with Neorg
-						config = {
-							workspaces = {
-								home = "~/neorg",
-							},
-						},
-					},
-					["core.norg.completion"] = {
-						config = {
-							engine = "nvim-cmp",
-						},
-					},
-					["core.keybinds"] = {
-						-- Configure core.keybinds
-						config = {
-							default_keybinds = true, -- Generate the default keybinds
-							neorg_leader = "<Leader>o", -- This is the default if unspecified
-						},
-					},
-					["core.integrations.telescope"] = {}, -- Enable the telescope module
-					["core.gtd.base"] = {
-						config = {
-							workspace = "home",
-						},
-					},
-					["core.presenter"] = {
-						config = {
-							zen_mode = "zen-mode",
-						},
-					},
-				},
-			})
-		end,
-		requires = {
-			"nvim-lua/plenary.nvim",
-			"nvim-neorg/neorg-telescope",
-		},
-	})
+	-- use({
+	-- 	"nvim-neorg/neorg",
+	-- 	-- tag = "latest",
+	-- 	config = function()
+	-- 		vim.opt.conceallevel = 2
+	-- 		vim.opt.concealcursor = "n"
+	--
+	-- 		local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
+	--
+	-- 		parser_configs.norg = {
+	-- 			install_info = {
+	-- 				url = "https://github.com/nvim-neorg/tree-sitter-norg",
+	-- 				files = { "src/parser.c", "src/scanner.cc" },
+	-- 				branch = "main",
+	-- 			},
+	-- 		}
+	--
+	-- 		parser_configs.norg_meta = {
+	-- 			install_info = {
+	-- 				url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
+	-- 				files = { "src/parser.c" },
+	-- 				branch = "main",
+	-- 			},
+	-- 		}
+	--
+	-- 		parser_configs.norg_table = {
+	-- 			install_info = {
+	-- 				url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
+	-- 				files = { "src/parser.c" },
+	-- 				branch = "main",
+	-- 			},
+	-- 		}
+	--
+	-- 		require("neorg").setup({
+	-- 			-- Tell Neorg what modules to load
+	-- 			load = {
+	-- 				["core.defaults"] = {}, -- Load all the default modules
+	-- 				["core.norg.concealer"] = {
+	-- 					config = {
+	-- 						markup_preset = "brave",
+	-- 					},
+	-- 				}, -- Allows for use of icons
+	-- 				["core.norg.dirman"] = {
+	-- 					-- Manage your directories with Neorg
+	-- 					config = {
+	-- 						workspaces = {
+	-- 							home = "~/neorg",
+	-- 						},
+	-- 					},
+	-- 				},
+	-- 				["core.norg.completion"] = {
+	-- 					config = {
+	-- 						engine = "nvim-cmp",
+	-- 					},
+	-- 				},
+	-- 				["core.keybinds"] = {
+	-- 					-- Configure core.keybinds
+	-- 					config = {
+	-- 						default_keybinds = true, -- Generate the default keybinds
+	-- 						neorg_leader = "<Leader>o", -- This is the default if unspecified
+	-- 					},
+	-- 				},
+	-- 				["core.integrations.telescope"] = {}, -- Enable the telescope module
+	-- 				["core.gtd.base"] = {
+	-- 					config = {
+	-- 						workspace = "home",
+	-- 					},
+	-- 				},
+	-- 				["core.presenter"] = {
+	-- 					config = {
+	-- 						zen_mode = "zen-mode",
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- 	requires = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"nvim-neorg/neorg-telescope",
+	-- 	},
+	-- })
 
 	use({
 		"petertriho/nvim-scrollbar",
@@ -1132,12 +1151,25 @@ return require("packer").startup(function(use)
 			-- vim.opt.listchars:append("space:⋅")
 			vim.cmd([[hi IndentBlanklineChar guifg=#39383f]])
 			vim.cmd([[hi IndentBlanklineContextChar guifg=#53525c]])
+			vim.cmd([[highlight IndentBlanklineContextStart guisp=#53525c gui=underline]])
 
 			require("indent_blankline").setup({
 				space_char_blankline = " ",
-				show_current_context = true,
-				enabled = false,
-				show_current_context_start = true,
+				-- show_current_context = true,
+				enabled = true,
+				-- show_current_context_start = true,
+				filetype_exclude = {
+					"dashboard",
+					"packer",
+					"terminal",
+					"help",
+					"log",
+					"markdown",
+					"TelescopePrompt",
+					"lsp-installer",
+					"lspinfo",
+					"toggleterm",
+				},
 			})
 		end,
 	})
@@ -1461,4 +1493,170 @@ return require("packer").startup(function(use)
 			})
 		end,
 	})
+
+
+	use {
+		'chomosuke/term-edit.nvim',
+		tag = 'v1.*',
+		config = function()
+			require 'term-edit'.setup {
+				prompt_end = '%$ ',
+			}
+		end,
+	}
+
+	use({
+		'voldikss/vim-floaterm',
+		config = function()
+
+			vim.cmd [[let g:floaterm_wintype='split']]
+			vim.cmd [[let g:floaterm_width=1.0]]
+			vim.cmd [[let g:floaterm_height=0.35]]
+			vim.cmd [[let g:floaterm_position='bottom']]
+
+			vim.cmd [[let g:floaterm_autoinsert=v:true]]
+
+			vim.cmd [[hi link Floaterm NvimTreeNormal]]
+			vim.cmd [[hi link FloatermBorder NvimTreeNormal]]
+			vim.cmd [[hi link FloatermNC NvimTreeNormalNC]]
+
+			-- exit normal mode on esc in term
+			vim.cmd [[:tnoremap <Esc> <C-\><C-n>]]
+
+			-- navigate splits in term without
+			-- going to normal mode
+			vim.cmd [[tnoremap <C-h> <C-\><C-n><C-w>h]]
+			vim.cmd [[tnoremap <C-j> <C-\><C-n><C-w>j]]
+			vim.cmd [[tnoremap <C-k> <C-\><C-n><C-w>k]]
+			vim.cmd [[tnoremap <C-l> <C-\><C-n><C-w>l]]
+
+
+		end
+	})
+
+	use({
+		"dnlhc/glance.nvim",
+		config = function()
+			require('glance').setup({
+				-- your configuration
+				detached = true,
+				border = {
+					enable = true,
+					top_char = '―',
+					bottom_char = '―',
+				},
+			})
+		end,
+	})
+
+	use({
+		'knubie/vim-kitty-navigator',
+		run = 'cp ./*.py ~/.config/kitty/'
+	})
+
+	use {
+		"nvim-neorg/neorg",
+		run = ":Neorg sync-parsers", -- This is the important bit!
+		config = function()
+			vim.opt.conceallevel = 2
+			require('neorg').setup {
+				load = {
+					["core.defaults"] = {},
+					["core.norg.dirman"] = {
+						config = {
+							workspaces = {
+								work = "~/neorg",
+							},
+							default_workspace = "work"
+						}
+					},
+					["core.norg.concealer"] = {
+						config = {
+							markup_preset = "brave",
+						},
+					}, -- Allows for use of icons
+				}
+			}
+		end,
+	}
+	use {
+		'AlexvZyl/nordic.nvim',
+		config = function()
+			vim.cmd [[hi Search guibg=LightYellow guifg=Black]]
+		end
+	}
+
+
+	use {
+		'jdhao/better-escape.vim',
+		-- event = 'InsertEnter',
+		config = function()
+
+			vim.cmd [[
+				let g:better_escape_shortcut = ['jk', 'jj', 'kj', 'kk']
+				let g:better_escape_interval = 200
+			]]
+
+		end,
+	}
+	use {
+		"SmiteshP/nvim-navbuddy",
+		requires = {
+			"neovim/nvim-lspconfig",
+			"SmiteshP/nvim-navic",
+			"MunifTanjim/nui.nvim"
+		},
+		config = function()
+			local navbuddy = require("nvim-navbuddy")
+			local actions = require("nvim-navbuddy.actions")
+			navbuddy.setup {
+				window = {
+					-- border = "single", -- "rounded", "double", "solid", "none"
+					border = "rounded",
+					-- or an array with eight chars building up the border in a clockwise fashion
+					-- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
+				},
+				mappings = {
+					["<esc>"] = actions.close, -- Close and cursor to original location
+					["q"] = actions.close,
+
+					["j"] = actions.next_sibling, -- down
+					["k"] = actions.previous_sibling, -- up
+
+					["h"] = actions.parent, -- Move to left panel
+					["l"] = actions.children, -- Move to right panel
+
+					["v"] = actions.visual_name, -- Visual selection of name
+					["V"] = actions.visual_scope, -- Visual selection of scope
+
+					["y"] = actions.yank_name, -- Yank the name to system clipboard "+
+					["Y"] = actions.yank_scope, -- Yank the scope to system clipboard "+
+
+					["i"] = actions.insert_name, -- Insert at start of name
+					["I"] = actions.insert_scope, -- Insert at start of scope
+
+					["a"] = actions.append_name, -- Insert at end of name
+					["A"] = actions.append_scope, -- Insert at end of scope
+
+					["r"] = actions.rename, -- Rename currently focused symbol
+
+					["d"] = actions.delete, -- Delete scope
+
+					["f"] = actions.fold_create, -- Create fold of current scope
+					["F"] = actions.fold_delete, -- Delete fold of current scope
+
+					["c"] = actions.comment, -- Comment out current scope
+
+					["<enter>"] = actions.select, -- Goto selected symbol
+					["o"] = actions.select,
+				},
+				lsp = {
+					auto_attach = true, -- If set to true, you don't need to manually use attach function
+					preference = nil -- list of lsp server names in order of preference
+				}
+			}
+
+		end,
+	}
+
 end)

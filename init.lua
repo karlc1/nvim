@@ -9,10 +9,11 @@ require("snippets")
 -- for testing plugin
 vim.api.nvim_set_keymap("n", "gx", ":lua require('context-refs').find_refs()<CR>", { noremap = false, silent = true })
 
--- vim.cmd("colorscheme embark")
+-- vim.cmd("colorscheme nordic")
 -- vim.cmd("colorscheme catppuccin")
-vim.g.catppuccin_flavour = "mocha"
-vim.cmd("colorscheme catppuccin")
+-- vim.g.catppuccin_flavour = "mocha"
+-- vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme embark")
 
 -- vim.cmd([[highlight Normal guibg=none]])
 -- vim.cmd([[highlight NonText guibg=none guifg=none]])
@@ -42,13 +43,18 @@ vim.cmd("set smartcase")
 vim.cmd("set noswapfile")
 vim.cmd("set number")
 
+
+-- preserve vertical alignment on split,
+-- replaces luukvbaal/stabilize.nvim plugin
+vim.cmd("set splitkeep=screen")
+
 vim.opt.cmdheight = 0
 
 vim.diagnostic.config({
-	virtual_text = false,
-	signs = true,
-	update_in_insert = false,
-	severity_sort = false,
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+    severity_sort = false,
 })
 
 -- disable mouse since some plugin tries to enable it
@@ -74,7 +80,7 @@ au CursorHold * checktime
 
 -- Highlight current line, but only in the line number
 vim.api.nvim_exec(
-	[[
+    [[
     set cursorline
     " highlight clear CursorLine
     highlight clear CursorLineNr
@@ -91,8 +97,8 @@ vim.api.nvim_exec(
                      " \ | hi Function gui=bold
     augroup END
 
-]],
-	false
+]]   ,
+    false
 )
 
 -- Indent to correct position when entering insert mode
@@ -124,8 +130,8 @@ vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true, silent = true })
 -- Highlight yanked text
 local highlight_yank = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-	command = 'silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=150}',
-	group = highlight_yank,
+    command = 'silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=150}',
+    group = highlight_yank,
 })
 
 -- Hide tilde characters on empty lines

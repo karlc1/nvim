@@ -14,3 +14,5 @@ exec 'hi DiagnosticSignError guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' 
 exec 'hi DiagnosticSignWarn guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('DiagnosticWarn'),'fg')
 exec 'hi DiagnosticSignInfo guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('DiagnosticInfo'),'fg')
 exec 'hi DiagnosticSignHint guibg=' . synIDattr(hlID('Normal'),'bg') ' guifg=' . synIDattr(hlID('DiagnosticHint'),'fg')
+
+hi link LspReferenceText Search

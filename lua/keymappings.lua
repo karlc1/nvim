@@ -9,6 +9,15 @@ vim.keymap.set({ "n" }, "dd", function()
 	return "dd"
 end, { expr = true, noremap = false, silent = true })
 
+
+-- toggle floating terminal
+vim.cmd [[let g:floaterm_keymap_toggle = '<C-z>']]
+-- workaround to make :wqa work with a hidden terminal
+vim.cmd [[
+	command Z w | qa
+	cabbrev wqa Z
+]]
+
 -- yank and with yanky
 vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
 vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
@@ -58,15 +67,24 @@ vim.api.nvim_set_keymap("v", "<C-r>", '"hy:.,$s/<C-r>h//gc<left><left><left>', {
 -- vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
 -- Scroll on J and K without moving cursor
-vim.api.nvim_set_keymap("n", "J", "1<C-e>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "K", "1<C-y>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "J", "2<C-e>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "K", "2<C-y>", { noremap = true, silent = true })
 
 -- scroll with wheel and arrows
 vim.api.nvim_set_keymap("n", "<Down>", "1<C-e>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<Up>", "1<C-y>", { noremap = true, silent = true })
 
--- Disable highlight on <ESC>
-vim.api.nvim_set_keymap("n", "<ESC>", ":noh<ESC>", { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "g*",
+	":noh<CR>:lua vim.lsp.buf.clear_references()<CR>:lua vim.lsp.buf.document_highlight()<CR>",
+	{ noremap = true, silent = true })
+
+-- Disable highlights on <ESC>
+vim.api.nvim_set_keymap(
+	"n",
+	"<ESC>",
+	":lua vim.lsp.buf.clear_references()<CR>:noh<ESC>",
+	{ noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("i", "<C-l>", ":echo 'apa'<CR>", { noremap = false, silent = true })
 
@@ -209,6 +227,8 @@ wk.register({
 			end,
 			"Show test output",
 		},
+
+		t = { ":FloatermToggle <CR>", "Toggle terminal" },
 	},
 	d = {
 		name = "Debug and diagnostics",
@@ -329,16 +349,16 @@ wk.register({
 		"Go to dev in vsplit",
 	},
 	r = {
-		function()
-			require("telescope.builtin").lsp_references()
-		end,
-		"Go to references",
+		":Glance references<CR>",
+		"Glance references",
 	},
 	i = {
-		function()
-			require("telescope.builtin").lsp_implementations()
-		end,
-		"Go to implementations",
+		":Glance implementations<CR>",
+		"Glance implementations",
+	},
+	t = {
+		":Glance type_definitions<CR>",
+		"Glance type definition",
 	},
 	h = {
 		function()
