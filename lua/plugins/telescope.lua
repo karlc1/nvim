@@ -5,7 +5,6 @@ return {
 	keys = {
 		{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find files" },
 		{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Live grep" },
-
 	},
 	config = function()
 		require("telescope").setup({
@@ -29,5 +28,10 @@ return {
 				},
 			},
 		})
+
+		vim.cmd[[
+        	highlight! link TelescopeResultsStruct structure
+            highlight! link TelescopeResultsMethod string
+		]]
 	end,
 }

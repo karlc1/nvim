@@ -25,6 +25,14 @@ vim.opt.number = true
 vim.opt.virtualedit = "all"
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
+vim.cmd("set noswapfile")
+
+-- persistent undo history
+-- vim.opt.undofile = true
+-- NOT WORKING BELOW
+-- vim.opt.undodir = os.getenv("HOME") .. "/.vim/undofile"
+-- vim.opt.undolevels = 1000
+-- vim.opt.undoreload = 10000
 
 -- yank to clipboard
 vim.api.nvim_set_option("clipboard", "unnamed")
@@ -56,14 +64,16 @@ vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true, silent = true })
 
 -- indent to correct position when entering insert mode
-vim.cmd([[function! IndentWithI()
+vim.cmd([[
+function! IndentWithI()
     if len(getline('.')) == 0
         return "\"_cc"
     else
         return "i"
     endif
 endfunction
-nnoremap <expr> i IndentWithI()]])
+nnoremap <expr> i IndentWithI()
+]])
 
 -- disable copying deleted text using c or x
 vim.keymap.set("n", "x", '"_x', { noremap = true, silent = true })

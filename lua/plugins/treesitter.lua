@@ -16,5 +16,8 @@ return {
 		vim.cmd("set foldmethod=expr")
 		vim.cmd("set foldexpr=nvim_treesitter#foldexpr()")
 		vim.cmd("set nofoldenable")
+
+		-- interpret tfvar files as normal terraform files in highlighting
+		vim.cmd("autocmd BufNewFile,BufRead *.tfvars set ft=tf")
 	end,
 }
