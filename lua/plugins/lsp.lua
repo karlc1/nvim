@@ -1,8 +1,3 @@
-vim.diagnostic.config({
-	virtual_text = false,
-	virtual_lines = { highlight_whole_line = false },
-})
-
 -- override general config with lsp specific setup
 local function config_overrides()
 	require("lspconfig").lua_ls.setup({
@@ -21,6 +16,7 @@ return {
 	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "v2.x",
+		event = "LspAttach",
 		dependencies = {
 			{ "neovim/nvim-lspconfig" },
 			{ "hrsh7th/nvim-cmp" },
@@ -32,48 +28,6 @@ return {
 			{ "rafamadriz/friendly-snippets" },
 			{ "nvim-telescope/telescope.nvim" },
 			{ "williamboman/mason-lspconfig.nvim" },
-			{
-				"williamboman/mason.nvim",
-				build = function()
-					pcall(vim.cmd, "MasonUpdate")
-				end,
-				config = function()
-					require("mason").setup()
-				end,
-			},
-			{
-				"dnlhc/glance.nvim",
-				config = function()
-					require("glance").setup({
-						detached = true,
-						border = {
-							enable = true,
-							top_char = "―",
-							bottom_char = "―",
-						},
-					})
-				end,
-			},
-			{
-				"glepnir/lspsaga.nvim",
-				event = "LspAttach",
-				build = ":TSInstall markdown markdown_inline",
-				config = function()
-					require("lspsaga").setup({})
-				end,
-				dependencies = {
-					{ "nvim-tree/nvim-web-devicons" },
-					{ "nvim-treesitter/nvim-treesitter" },
-				},
-			},
-			{
-				"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-				config = function()
-					require("lsp_lines").setup()
-					-- disable on startup
-					require("lsp_lines").toggle()
-				end,
-			},
 		},
 		config = function()
 			local lsp = require("lsp-zero").preset({
@@ -126,12 +80,6 @@ return {
 				)
 				vim.keymap.set(
 					"n",
-					"<Leader>td",
-					require("lsp_lines").toggle,
-					{ silent = true, buffer = true, desc = "Toggle lsp lines" }
-				)
-				vim.keymap.set(
-					"n",
 					"<leader>fs",
 					require("telescope.builtin").lsp_document_symbols,
 					{ silent = true, buffer = true, desc = "Document symbols" }
@@ -147,12 +95,6 @@ return {
 					"<leader>dn",
 					"<cmd>Lspsaga diagnostic_jump_next<cr>",
 					{ silent = true, buffer = true, desc = "Jump to next diagnostic" }
-				)
-				vim.keymap.set(
-					"n",
-					"<leader>dp",
-					"<cmd>Lspsaga diagnostic_jump_prev<cr>",
-					{ silent = true, buffer = true, desc = "Jump to previous diagnostic" }
 				)
 				vim.keymap.set(
 					"n",
@@ -198,10 +140,12 @@ return {
 					{ name = "luasnip", keyword_length = 2 },
 				},
 				mapping = {
-					["<C-j>"] = cmp_action.luasnip_supertab(),
-					["<C-k>"] = cmp_action.luasnip_shift_supertab(),
+					["<Tab>"] = cmp_action.luasnip_supertab(),
+					["<S-Tab>"] = cmp_action.luasnip_shift_supertab(),
 					["<CR>"] = cmp.mapping.confirm({ select = false }),
 					["<C-CR>"] = cmp.mapping.complete(),
+					["<C-u>"] = cmp.mapping.scroll_docs(-4),
+					["<C-d>"] = cmp.mapping.scroll_docs(4),
 				},
 			})
 		end,
@@ -233,11 +177,70 @@ return {
 				[[
             augroup FormatAutogroup
               autocmd!
-            	autocmd BufWritePost * silent lua vim.lsp.buf.format()
+            	autocmd BufWritePre * silent lua vim.lsp.buf.format()
             augroup END
             ]],
 				true
 			)
+		end,
+	},
+	{
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		event = "LspAttach",
+		init = function()
+			vim.diagnostic.config({
+				virtual_text = false,
+				virtual_lines = { highlight_whole_line = false },
+			})
+		end,
+		config = function()
+			print("LSP LINES ATTACH")
+			require("lsp_lines").setup()
+			-- disable on startup
+			require("lsp_lines").toggle()
+			vim.keymap.set(
+				"n",
+				"<Leader>td",
+				require("lsp_lines").toggle,
+				{ silent = true, buffer = true, desc = "Toggle lsp lines" }
+			)
+		end,
+	},
+
+	{
+		"williamboman/mason.nvim",
+		event = "VeryLazy",
+		build = function()
+			pcall(vim.cmd, "MasonUpdate")
+		end,
+		config = function()
+			require("mason").setup()
+		end,
+	},
+	{
+		"glepnir/lspsaga.nvim",
+		dependencies = {
+			{ "nvim-tree/nvim-web-devicons" },
+			{ "nvim-treesitter/nvim-treesitter" },
+		},
+		build = ":TSInstall markdown markdown_inline",
+		event = "LspAttach",
+		config = function()
+			require("lspsaga").setup({})
+		end,
+	},
+	{
+		"dnlhc/glance.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("glance").setup({
+				detached = true,
+				border = {
+					enable = true,
+					top_char = "―",
+					bottom_char = "―",
+				},
+			})
 		end,
 	},
 }

@@ -1,6 +1,7 @@
 return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
+		event = "VeryLazy",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
@@ -26,11 +27,18 @@ return {
 		},
 		branch = "v2.x",
 		keys = {
-			{ "<leader>ft", "<cmd>Neotree reveal<cr>", desc = "NeoTree" },
+			{ "<leader>e", "<cmd>Neotree toggle reveal<cr>", desc = "Toggle tree view" },
+			{ "<leader>E", "<cmd>Neotree reveal<cr>", desc = "Reveal tree view" },
 		},
 		config = function()
 			vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 			require("neo-tree").setup({
+				sync_root_with_cwd = true,
+				-- respect_buf_cwd = true,
+				update_focused_file = {
+					enable = true,
+					update_root = true,
+				},
 				close_if_last_window = true,
 
 				window = {
@@ -47,7 +55,6 @@ return {
 					},
 				},
 				default_component_configs = {
-
 					git_status = {
 						symbols = {
 							deleted = "",
