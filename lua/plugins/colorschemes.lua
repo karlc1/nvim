@@ -1,5 +1,3 @@
-
-
 return {
 	{
 		"folke/tokyonight.nvim",

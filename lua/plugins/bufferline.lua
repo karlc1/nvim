@@ -17,12 +17,13 @@ return {
 		{ "L", "<cmd>BufferLineCycleNext<cr>", mode = { "n" }, desc = "Next buffer" },
 		{ "H", "<cmd>BufferLineCyclePrev<cr>", mode = { "n" }, desc = "Previous buffer" },
 		{ "Q", "<cmd>lua MiniBufremove.delete()<cr>", mode = { "n" }, desc = "Delete buffer" },
+		{ "<C-x>", "<cmd>lua MiniBufremove.delete()<cr>", mode = { "n" }, desc = "Delete buffer" },
 	},
 	config = function()
 		local bufferline = require("bufferline")
 		bufferline.setup({
 			options = {
-				separator_style = "slope",
+				-- separator_style = "slope",
 
 				always_show_bufferline = false,
 				buffer_close_icon = "",

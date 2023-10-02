@@ -1,10 +1,9 @@
 return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
-		event = "VeryLazy",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
+			-- "nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
 			{
 				"s1n7ax/nvim-window-picker",
@@ -17,7 +16,7 @@ return {
 						show_prompt = false,
 						filter_rules = {
 							bo = {
-								filetype = { "neo-tree", "neo-tree-popup", "notify" },
+								filetype = { "neo-tree", "neo-tree-popup", "notify", "fidget"},
 								buftype = { "terminal", "quickfix" },
 							},
 						},
@@ -27,9 +26,10 @@ return {
 		},
 		branch = "v2.x",
 		keys = {
-			{ "<leader>e", "<cmd>Neotree toggle reveal<cr>", desc = "Toggle tree view" },
-			{ "<leader>E", "<cmd>Neotree reveal<cr>", desc = "Reveal tree view" },
+			{ "<leader>E", "<cmd>Neotree toggle<cr>", desc = "Toggle tree view" },
+			{ "<leader>e", "<cmd>Neotree reveal<cr>", desc = "Reveal tree view" },
 		},
+		cmd = "Neotree",
 		config = function()
 			vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 			require("neo-tree").setup({
@@ -46,6 +46,8 @@ return {
 						["<cr>"] = "open_with_window_picker",
 					},
 				},
+
+				hijack_netrw_behavior = "open_default",
 
 				filesystem = {
 					filtered_items = {

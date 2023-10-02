@@ -5,9 +5,13 @@ return {
 	keys = {
 		{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find files" },
 		{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Live grep" },
+		{ "<leader>fw", require("telescope.builtin").grep_string, desc = "Grep word under cursor" },
+		{ "<leader>fr", require("telescope.builtin").resume, desc = "Resume previous search" },
 	},
 	config = function()
 		require("telescope").setup({
+
+			color_devicons = true,
 			pickers = {
 				find_files = {
 					theme = "dropdown",
@@ -28,10 +32,10 @@ return {
 				},
 			},
 		})
-
-		vim.cmd[[
+		vim.cmd([[
+			" "highlight TelescopeSelection      guibg=bg gui=bold
         	highlight! link TelescopeResultsStruct structure
             highlight! link TelescopeResultsMethod string
-		]]
+		]])
 	end,
 }

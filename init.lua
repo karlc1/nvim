@@ -30,10 +30,14 @@ vim.opt.number = true
 vim.opt.virtualedit = "all"
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
+vim.g.netrw_banner = 0
 vim.cmd("set noswapfile")
 vim.cmd("set ignorecase")
 vim.cmd("set smartcase")
 vim.cmd("set hidden")
+vim.cmd("set signcolumn=yes")
+vim.cmd("set conceallevel=2")
+vim.cmd("set concealcursor=n")
 
 -- persistent undo history
 -- vim.opt.undofile = true
@@ -53,13 +57,6 @@ vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true 
 
 -- clear highlight on esc
 vim.keymap.set("n", "<Esc>", "<cmd>noh<cr><Esc>", { noremap = true, silent = true })
-
--- highlight yanked text
-local highlight_yank = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
-vim.api.nvim_create_autocmd("TextYankPost", {
-	command = 'silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=150}',
-	group = highlight_yank,
-})
 
 -- do not jump when highlighting with '*'
 vim.cmd("nnoremap <silent> * :let @/ = '<c-r><c-w>' \\| set hlsearch<cr>")
@@ -86,14 +83,10 @@ vim.cmd([[
 ]])
 
 -- disable copying deleted text using c or x
-vim.keymap.set("n", "x", '"_x', { noremap = true, silent = true })
-vim.keymap.set("v", "x", '"_x', { noremap = true, silent = true })
-vim.keymap.set("n", "X", '"_X', { noremap = true, silent = true })
-vim.keymap.set("v", "X", '"_X', { noremap = true, silent = true })
-vim.keymap.set("n", "c", '"_c', { noremap = true, silent = true })
-vim.keymap.set("v", "c", '"_c', { noremap = true, silent = true })
-vim.keymap.set("n", "C", '"_C', { noremap = true, silent = true })
-vim.keymap.set("v", "C", '"_C', { noremap = true, silent = true })
+vim.keymap.set({ "n", "x" }, "x", '"_x', { noremap = true, silent = true })
+vim.keymap.set({ "n", "x" }, "X", '"_X', { noremap = true, silent = true })
+vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true, silent = true })
+vim.keymap.set({ "n", "x" }, "C", '"_C', { noremap = true, silent = true })
 
 -- make currnent line number highlighted
 vim.cmd([[
@@ -109,3 +102,67 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.keymap.set("n", "gd", "<C-]>", { silent = true, buffer = opts.buf })
 	end,
 })
+
+-- do not copy text to clipboard when deleting empty line
+vim.keymap.set({ "n" }, "dd", function()
+	if vim.api.nvim_get_current_line():match("^%s*$") then
+		return '"_dd'
+	end
+
+	return "dd"
+end, { expr = true, noremap = false, silent = true })
+
+-- move over wrapped lines
+vim.api.nvim_set_keymap("n", "j", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "k", "gk", { noremap = true, silent = true })
+
+function KittyBufferHistoryClean()
+	vim.cmd("set nomodifiable")
+	vim.cmd("set noconfirm")
+	vim.cmd("set nonu")
+	vim.cmd("silent! %s/\\e\\[[0-9:;]*m//g")
+	vim.cmd("silent! %s/[^[:alnum:][:punct:][:space:]]//g")
+	vim.cmd("silent! %s/\\e\\[[^\\s]*\\s//g")
+	vim.cmd("silent! %s/\\s*$//")
+	vim.cmd('let @/ = ""')
+	vim.cmd("cnoremap q q!")
+end
+
+vim.cmd("command KittyScrollback lua KittyBufferHistoryClean()")
+
+-- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+-- local format_cmd_id = vim.api.nvim_create_autocmd("BufWritePre", {
+-- 	group = augroup,
+-- 	callback = function()
+-- 		vim.lsp.buf.format()
+-- 	end,
+-- })
+
+local format_cmd_id = -2
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
+-- local function toggle_autoformat()
+-- 	if format_cmd_id < 0 then
+-- 		if format_cmd_id == -1 then
+-- 			require("notify")("Auto format enabled")
+-- 		end
+-- 		vim.api.nvim_clear_autocmds({ group = augroup })
+-- 		format_cmd_id = vim.api.nvim_create_autocmd("BufWritePre", {
+-- 			group = augroup,
+-- 			callback = function()
+-- 				vim.lsp.buf.format()
+-- 			end,
+-- 		})
+-- 	else
+-- 		vim.api.nvim_del_autocmd(format_cmd_id)
+-- 		format_cmd_id = -1
+-- 		require("notify")("Auto format disabled")
+-- 	end
+-- end
+
+-- toggle_autoformat()
+
+-- vim.keymap.set({ "n", "x" }, "<leader>tf", toggle_autoformat, { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "J", "2<C-e>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "K", "2<C-y>", { noremap = true, silent = true })
